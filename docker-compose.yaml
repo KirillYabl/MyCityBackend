@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  postgres: # https://habr.com/ru/post/578744/
+    image: postgres:14.6-alpine
+    volumes:
+      - .:/var/lib/postgresql/data
+    env_file:
+      - ./my_city/my_city/.env
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
