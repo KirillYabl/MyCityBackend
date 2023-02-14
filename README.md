@@ -69,3 +69,4 @@ python manage.py runserver
 
 ## Другие репозитории и важные ссылки внутри проекта
 1. [Группа квеста во "Вконтакте"](https://vk.com/mg_stv)
+2. [Frontend](https://github.com/IVKrylova/routes-of-my-city)
