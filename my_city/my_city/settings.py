@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import dj_database_url
-import os
 from environs import Env
 
 env = Env()
@@ -109,9 +108,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-staticfiles = os.path.join(BASE_DIR / 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
-STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
+STATIC_ROOT = (BASE_DIR / 'static')
+MEDIA_ROOT = (BASE_DIR / 'media')
+STATICFILES_DIRS = ((BASE_DIR / 'static'),)
 
 
 # Default primary key field type
