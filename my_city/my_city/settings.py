@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'user_app',
     'quest_app',
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
