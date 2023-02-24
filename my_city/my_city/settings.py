@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'user_app',
     'quest_app',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +47,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 ROOT_URLCONF = 'my_city.urls'
 

@@ -11,6 +11,7 @@ from .settings import (DEBUG,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls'))
 ] + (static(STATIC_URL, document_root=STATIC_ROOT)
      + static(MEDIA_URL, document_root=MEDIA_ROOT))
 
