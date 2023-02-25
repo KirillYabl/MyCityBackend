@@ -31,9 +31,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+
     'user_app',
     'quest_app',
+
+    'debug_toolbar',
+    'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +50,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 ROOT_URLCONF = 'my_city.urls'
 
