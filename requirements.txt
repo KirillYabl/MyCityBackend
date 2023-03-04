@@ -7,4 +7,4 @@ flake8-isort
 djangorestframework==3.14.0
 django-filter
 drf_yasg==1.21.5
-knox==0.1.14
+django-rest-knox==4.2.0
