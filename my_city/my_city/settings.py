@@ -1,5 +1,6 @@
 from pathlib import Path
-
+from datetime import timedelta
+from rest_framework.settings import api_settings
 import dj_database_url
 from environs import Env
 
@@ -31,9 +32,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+
     'user_app',
     'quest_app',
+
+    'debug_toolbar',
+    'rest_framework',
+    'drf_yasg',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -46,6 +52,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 ROOT_URLCONF = 'my_city.urls'
 
@@ -124,3 +135,13 @@ AUTH_USER_MODEL = 'user_app.User'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+REST_KNOX = {
+  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+  'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+  'TOKEN_TTL': timedelta(hours=10),
+  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+  'TOKEN_LIMIT_PER_USER': None,
+  'AUTO_REFRESH': False,
+  'EXPIRY_DATETIME_FORMAT': api_settings.DATETME_FORMAT,
+}
