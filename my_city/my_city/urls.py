@@ -31,7 +31,8 @@ urlpatterns = [
     path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0),
          name='schema-redoc'),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('knox.urls')),
+    path('api/', include('user_app.urls')),
+    path('api/auth/', include('knox.urls')),
 ] + (static(STATIC_URL, document_root=STATIC_ROOT)
      + static(MEDIA_URL, document_root=MEDIA_ROOT))
 
