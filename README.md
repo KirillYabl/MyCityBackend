@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 ```shell
 cd ./my_city
-python manage.py migrate
+python managers.py migrate
 ```
 
 ## Как запустить
@@ -57,7 +57,7 @@ python manage.py migrate
 Выполнить команду из папки `my_city` относительно корневой папки проекта
 
 ```shell
-python manage.py runserver
+python managers.py runserver
 ```
 
 ## Используемые технологии
