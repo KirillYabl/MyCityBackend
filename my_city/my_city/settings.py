@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'drf_yasg',
+    'knox',
 ]
 
 MIDDLEWARE = [
@@ -51,11 +52,8 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
 }
-
 ROOT_URLCONF = 'my_city.urls'
 
 TEMPLATES = [
@@ -128,7 +126,8 @@ STATICFILES_DIRS = ((BASE_DIR / 'static'),)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Users
-AUTH_USER_MODEL = 'user_app.User'
+AUTH_USER_MODEL = 'user_app.CustomUser'
+
 #work_ip
 INTERNAL_IPS = [
     '127.0.0.1',
