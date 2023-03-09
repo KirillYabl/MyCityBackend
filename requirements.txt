@@ -7,3 +7,4 @@ flake8-isort
 djangorestframework==3.14.0
 django-filter
 drf_yasg
+django-phonenumber-field[phonenumbers]==7.0.*

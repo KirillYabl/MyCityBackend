@@ -20,7 +20,11 @@ DEBUG = env.bool('DEBUG', True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', '0.0.0.0'])
 
+# Project settings
+
 POSTGRES_DB_URL = env.str('POSTGRES_DB_URL')
+
+MAX_MEMBERS_IN_TEAM = env.int('MAX_MEMBERS_IN_TEAM', 5)
 
 # Application definition
 

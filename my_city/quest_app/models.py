@@ -4,7 +4,7 @@ from django.template.defaultfilters import truncatechars
 
 
 class ContactType(models.Model):
-    """Тип контакта нужен, чтобы фронтенд понимал, в какой блок пойдет контакт"""
+    """Тип контакта нужен, чтобы фронтенд понимал, в какой блок пойдет контакт."""
     name = models.CharField('наименование типа контакта', max_length=64)
 
     class Meta:
@@ -16,7 +16,7 @@ class ContactType(models.Model):
 
 
 class Contact(models.Model):
-    """Контакты: соцсети, телефоны, ссылка на политики и т.д. для футера"""
+    """Контакты: соцсети, телефоны, ссылка на политики и т.д. для футера."""
     contact_type = models.ForeignKey(
         verbose_name='тип контакта',
         to=ContactType,
@@ -36,7 +36,7 @@ class Contact(models.Model):
 
 
 class FAQ(models.Model):
-    """Часто задаваемые вопросы с ответами"""
+    """Часто задаваемые вопросы с ответами."""
     question = models.TextField('вопрос', unique=True)
     answer = models.TextField('ответ')
     order = models.PositiveSmallIntegerField('порядок показа', unique=True, validators=[MinValueValidator(1)])
