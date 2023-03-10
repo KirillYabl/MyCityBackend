@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -51,9 +52,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
-REST_FRAMEWORK = {
-'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)}
+
+
+REST_KNOX = {
+  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+  'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+  'TOKEN_TTL': timedelta(hours=24),
+  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+  'TOKEN_LIMIT_PER_USER': None,
+  'AUTO_REFRESH': False,
 }
+
+TOKEN_INDEX = 1
+
 ROOT_URLCONF = 'my_city.urls'
 
 TEMPLATES = [
@@ -126,9 +138,9 @@ STATICFILES_DIRS = ((BASE_DIR / 'static'),)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Users
-AUTH_USER_MODEL = 'user_app.CustomUser'
+AUTH_USER_MODEL = 'user_app.User'
 
-#work_ip
+# work_ip
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
