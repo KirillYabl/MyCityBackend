@@ -16,3 +16,28 @@ class ContactAdmin(admin.ModelAdmin):
 @admin.register(m.FAQ)
 class FAQAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(m.Quest)
+class Quest(admin.ModelAdmin):
+    pass
+
+
+@admin.register(m.Category)
+class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(m.AnswerType)
+class AnswerTypeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(m.Assignment)
+class Assignment(admin.ModelAdmin):
+    pass
+
+
+@admin.register(m.AnswerAttempt)
+class AnswerAttemptAdmin(admin.ModelAdmin):
+    pass
