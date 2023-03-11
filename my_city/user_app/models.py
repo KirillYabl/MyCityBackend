@@ -1,3 +1,5 @@
+import string
+
 from django.conf import settings
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
@@ -22,7 +24,7 @@ class Team(models.Model):
         max_length=100,
         validators=[RegexValidator(
             # rus, eng, punctuation, digits signs, splitted with only 1 space
-            regex=r'^[ёЁа-яА-Я\p{P}\w]+( [ёЁа-яА-Я\p{P}\w]+)*$',
+            regex=r'^[ёЁа-яА-Я{punct}\w]+( [ёЁа-яА-Я{punct}\w]+)*$'.format(punct=string.punctuation),
             message=' '.join([
                 'в названии команды допускаются русские и английские буквы, цифры',
                 'и пробелы если название содержит несколько слов'
