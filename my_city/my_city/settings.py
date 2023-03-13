@@ -64,8 +64,6 @@ REST_KNOX = {
   'AUTO_REFRESH': False,
 }
 
-TOKEN_INDEX = 1
-
 ROOT_URLCONF = 'my_city.urls'
 
 TEMPLATES = [
