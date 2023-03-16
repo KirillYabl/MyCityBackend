@@ -11,3 +11,4 @@ django-phonenumber-field[phonenumbers]==7.0.*
 sorl.thumbnail==12.9.*
 Pillow==9.4.*
 django-cleanup==7.0.*
+django-rest-knox==4.2.*
