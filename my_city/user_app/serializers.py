@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import check_password
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from .models import User
 
@@ -23,16 +23,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email')
 
 
-
 class LoginUserSerializer(serializers.Serializer):
     email = serializers.CharField()
     password = serializers.CharField()
 
-    def validate_password(self, request):
-        email = request.get('email')
-        password = request.get('password')
-        user = authenticate(email=email, password=password)
-        if check_password(user.password, password):
-            return password
-
-
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+        if not authenticate(email=email, password=password):
+            raise ValidationError('wrong email or password')
+        return attrs
