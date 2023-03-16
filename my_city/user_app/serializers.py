@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import check_password
 from rest_framework import serializers
 
 from .models import User
@@ -21,16 +22,16 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email')
 
-    def validate_password_len(self, password):
-        if 8 > len(password) > 20:
-            raise serializers.ValidationError('Пароль должке содержать от 8 до 20 символов!')
-        return password
-
-
-
 
 
 class LoginUserSerializer(serializers.Serializer):
     email = serializers.CharField()
     password = serializers.CharField()
+
+    def validate_password(self, request):
+        password = request.get('password')
+        user = authenticate(password=password)
+        if check_password(user.password, password):
+            return password
+
 

@@ -1,4 +1,3 @@
-from django.contrib.auth.hashers import check_password
 from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
 from rest_framework import generics, permissions, status
@@ -31,7 +30,7 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = get_object_or_404(User, email=serializer.data['email'])
-        if check_password(request.POST['password'], user.password):
+        if serializer.is_valid():
             return Response({
             "token": AuthToken.objects.create(user)[token_index]
             })
