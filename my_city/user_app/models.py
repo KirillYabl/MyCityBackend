@@ -1,9 +1,10 @@
 import string
 
 from django.conf import settings
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxLengthValidator, MinLengthValidator
+from django.core.validators import (MaxLengthValidator, MaxValueValidator,
+                                    MinLengthValidator, MinValueValidator,
+                                    RegexValidator)
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 

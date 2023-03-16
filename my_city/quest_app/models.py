@@ -3,7 +3,6 @@ from django.db import models
 from django.template.defaultfilters import truncatechars
 from django.utils import timezone
 from sorl.thumbnail import ImageField
-from user_app.models import Team
 
 
 class ContactType(models.Model):
@@ -102,7 +101,7 @@ class Category(models.Model):
     )
     teams = models.ManyToManyField(
         verbose_name='участвующие команды',
-        to=Team,
+        to='user_app.Team',
         related_name='categories',
         null=True,
         blank=True,
@@ -193,7 +192,7 @@ class AnswerAttempt(models.Model):
     )
     team = models.ForeignKey(
         verbose_name='команда',
-        to=Team,
+        to='user_app.Team',
         on_delete=models.PROTECT,
         related_name='attempts',
     )
