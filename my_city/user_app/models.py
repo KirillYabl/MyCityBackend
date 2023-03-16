@@ -4,15 +4,18 @@ from django.db import models
 
 from .managers import UserManager
 
-max_length = 20
-min_length = 8
+max_password_length = 20
+min_password_length = 8
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(verbose_name='email address',
-                              unique=True,
-                              validators=(MinLengthValidator(min_length), MaxLengthValidator(max_length),),
-                              )
+    email = models.EmailField(verbose_name='email address', unique=True,)
+    password = models.CharField(max_length=150,
+                                verbose_name='password',
+                                validators=(MinLengthValidator(min_password_length),
+                                            MaxLengthValidator(max_password_length),
+                                            )
+                                )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()

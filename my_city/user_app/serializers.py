@@ -29,8 +29,9 @@ class LoginUserSerializer(serializers.Serializer):
     password = serializers.CharField()
 
     def validate_password(self, request):
+        email = request.get('email')
         password = request.get('password')
-        user = authenticate(password=password)
+        user = authenticate(email=email, password=password)
         if check_password(user.password, password):
             return password
 
