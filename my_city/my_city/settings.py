@@ -21,7 +21,11 @@ DEBUG = env.bool('DEBUG', True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', '0.0.0.0'])
 
+# Project settings
+
 POSTGRES_DB_URL = env.str('POSTGRES_DB_URL')
+
+MAX_MEMBERS_IN_TEAM = env.int('MAX_MEMBERS_IN_TEAM', 5)
 
 # Application definition
 
@@ -39,6 +43,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'drf_yasg',
+    'sorl.thumbnail',
+    'django_cleanup.apps.CleanupConfig',
     'knox',
 ]
 
@@ -54,14 +60,13 @@ MIDDLEWARE = [
 ]
 REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)}
 
-
 REST_KNOX = {
-  'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
-  'AUTH_TOKEN_CHARACTER_LENGTH': 64,
-  'TOKEN_TTL': timedelta(hours=24),
-  'USER_SERIALIZER': 'knox.serializers.UserSerializer',
-  'TOKEN_LIMIT_PER_USER': None,
-  'AUTO_REFRESH': False,
+    'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+    'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+    'TOKEN_TTL': timedelta(hours=24),
+    'USER_SERIALIZER': 'knox.serializers.UserSerializer',
+    'TOKEN_LIMIT_PER_USER': None,
+    'AUTO_REFRESH': False,
 }
 
 ROOT_URLCONF = 'my_city.urls'
@@ -128,7 +133,6 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_DIRS = ((BASE_DIR / 'static'),)
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

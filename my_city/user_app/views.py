@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from knox.models import AuthToken
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions
 from rest_framework.response import Response
 
 from .models import User
@@ -30,11 +30,10 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = get_object_or_404(User, email=serializer.data['email'])
-        if serializer.is_valid():
-            return Response({
+        return Response({
             "token": AuthToken.objects.create(user)[token_index]
-            })
-        return Response('Неверный пароль!', status=status.HTTP_404_NOT_FOUND)
+        })
+
 
 class UserAPI(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated, ]
