@@ -4,6 +4,7 @@ from django.template.defaultfilters import truncatechars
 from django.utils import timezone
 from sorl.thumbnail import ImageField
 
+from .querysets import QuestQueryset
 
 class ContactType(models.Model):
     """Тип контакта нужен, чтобы фронтенд понимал, в какой блок пойдет контакт."""
@@ -66,6 +67,8 @@ class Quest(models.Model):
         blank=True,
     )
 
+    objects = QuestQueryset.as_manager()
+
     class Meta:
         verbose_name = 'квест'
         verbose_name_plural = 'квесты'
@@ -103,7 +106,6 @@ class Category(models.Model):
         verbose_name='участвующие команды',
         to='user_app.Team',
         related_name='categories',
-        null=True,
         blank=True,
     )
 

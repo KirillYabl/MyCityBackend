@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'rest_framework',
+    'django_filters',
     'drf_yasg',
     'sorl.thumbnail',
     'django_cleanup.apps.CleanupConfig',
@@ -58,7 +59,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
-REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)}
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 12,
+}
 
 REST_KNOX = {
     'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
