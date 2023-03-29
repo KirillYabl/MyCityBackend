@@ -66,6 +66,8 @@ class Quest(models.Model):
         null=True,
         blank=True,
     )
+    address = models.CharField('адрес', max_length=256)
+    banner = models.ImageField('баннер квеста', upload_to='quests')
 
     objects = QuestQueryset.as_manager()
 

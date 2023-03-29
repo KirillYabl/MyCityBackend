@@ -17,5 +17,7 @@ class QuestSerializer(serializers.ModelSerializer):
             'start_at',
             'end_at',
             'stop_show_at',
+            'address',
+            'banner',
             'status',
         )
