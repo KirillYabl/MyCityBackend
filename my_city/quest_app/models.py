@@ -6,6 +6,7 @@ from sorl.thumbnail import ImageField
 
 from .querysets import QuestQueryset
 
+
 class ContactType(models.Model):
     """Тип контакта нужен, чтобы фронтенд понимал, в какой блок пойдет контакт."""
     name = models.CharField('наименование типа контакта', max_length=64)
