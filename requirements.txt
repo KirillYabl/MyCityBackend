@@ -2,6 +2,7 @@ environs[django]==9.5.*
 django==4.1.*
 psycopg2-binary==2.9.5
 django-debug-toolbar
+Faker
 flake8
 flake8-isort
 djangorestframework==3.14.0

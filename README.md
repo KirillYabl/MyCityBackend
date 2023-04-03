@@ -52,6 +52,20 @@ cd ./my_city
 python manage.py migrate
 ```
 
+## Заполнение БД тестовыми данными
+
+Для наполнения БД тестовыми данными `fill_test_data`
+
+```shell
+python manage.py fill_test_data
+```
+
+Чтобы удалить тестовые данные, необходимо выполнить команду `drop_test_data`
+
+```shell
+python manage.py drop_test_data
+```
+
 ## Как запустить
 
 Выполнить команду из папки `my_city` относительно корневой папки проекта
