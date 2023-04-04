@@ -3,6 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from quest_app.choices import QuestStatus
+from quest_app.models import Quest
 
 
 @pytest.mark.django_db
@@ -34,3 +35,49 @@ class TestQuestAPI:
         response = APIClient().get(url)
         assert response.status_code == 200
         assert response.data['name'] == coming_quest.name
+
+    def test_retrieve_nonexistent_quest(self):
+        nonexistent_id = Quest.objects.count() + 1
+        url = reverse('quest-detail', args=[nonexistent_id])
+        response = APIClient().get(url)
+        assert response.status_code == 404
+        assert response.data['detail'].code == 'not_found'
+
+
+@pytest.mark.django_db
+class TestQuestCategoryAPI:
+
+    def test_list_category(self, quests):
+        active_quest = quests[1]
+        categories = active_quest.categories.all()
+        categories_count = categories.count()
+        response = APIClient().get(reverse('quest-categories-list', args=[active_quest.pk]))
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == categories_count
+        assert set(name[0] for name in categories.values_list('name').distinct()) == set(
+            category['name'] for category in data)
+
+    def test_nonexistent_quest_list_category(self):
+        nonexistent_index = Quest.objects.count() + 1
+        response = APIClient().get(reverse('quest-categories-list', args=[nonexistent_index]))
+        assert response.status_code == 200
+        data = response.json()
+        assert len(data) == 0
+        assert data == []
+
+    def test_retrieve_category(self, quests):
+        coming_quest = quests[0]
+        category = coming_quest.categories.first()
+        url = reverse('quest-categories-detail', args=[coming_quest.pk, category.pk])
+        response = APIClient().get(url)
+        assert response.status_code == 200
+        assert response.data['name'] == category.name
+
+    def test_retrieve_nonexistent_category(self, quests):
+        coming_quest = quests[0]
+        nonexistent_id = coming_quest.categories.count() + 1
+        url = reverse('quest-categories-detail', args=[coming_quest.pk, nonexistent_id])
+        response = APIClient().get(url)
+        assert response.status_code == 404
+        assert response.data['detail'].code == 'not_found'

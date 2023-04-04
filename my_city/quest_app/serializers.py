@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .choices import QuestStatus
-from .models import Quest
+from .models import Quest, Category
 
 
 class QuestSerializer(serializers.ModelSerializer):
@@ -20,4 +20,17 @@ class QuestSerializer(serializers.ModelSerializer):
             'address',
             'banner',
             'status',
+        )
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'name',
+            'short_description',
+            'long_description',
+            'participation_order',
+            'results_order',
         )

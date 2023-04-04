@@ -2,8 +2,9 @@ import os.path
 
 import pytest
 from django.utils import timezone
+from django.conf import settings
 
-from quest_app.models import Quest
+from quest_app.models import Quest, Category
 
 
 @pytest.fixture
@@ -62,4 +63,29 @@ def quests():
         address="Quest address",
         banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
     )
+
+    categories = []
+    for i in range(5):
+        categories.append(
+            Category(
+                name=f'Test category {i}',
+                quest=coming_quest,
+                short_description=f'Test short description {i}',
+                long_description=f'Test long description {i}' * 100,
+                participation_order=i + 1,
+                results_order=5 - i,
+            )
+        )
+    for i in range(settings.REST_FRAMEWORK['PAGE_SIZE'] + 1):
+        categories.append(
+            Category(
+                name=f'Test category {i}',
+                quest=active_quest,
+                short_description=f'Test short description {i}',
+                long_description=f'Test long description {i}' * 100,
+                participation_order=i + 1,
+                results_order=i + 1,
+            )
+        )
+    Category.objects.bulk_create(categories)
     return [coming_quest, active_quest, finished_quest, not_showing_quest, expired_quest, finished_stop_none_quest]
