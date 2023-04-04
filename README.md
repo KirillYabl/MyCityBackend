@@ -60,9 +60,17 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## Как запустить тесты
+
+```shell
+pytest
+```
+
 ## Используемые технологии
 1. Python
     - Django
+    - DRF
+    - pytest
 2. Postgresql
 3. Docker
 4. Docker compose
