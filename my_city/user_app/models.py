@@ -103,7 +103,7 @@ class Member(models.Model):
         verbose_name_plural = 'участники'
 
     def __str__(self):
-        return f'{self.new_field} ({self.birth_date})'
+        return f'{self.full_name} ({self.birth_date})'
 
 
 class TeamMembership(models.Model):
