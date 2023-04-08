@@ -1,6 +1,6 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import password_validation
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
+from django.core import exceptions
 
 from .models import User
 
@@ -16,20 +16,17 @@ class CreateUserSerializer(serializers.ModelSerializer):
                                         validated_data['password'])
         return user
 
+    def validate_password(self, password):
+        # https://gist.github.com/leafsummer/f4d67b58a4cc77174c31935d7e299c9e
+        try:
+            password_validation.validate_password(password=password)
+        except exceptions.ValidationError as e:
+            raise serializers.ValidationError(list(e.messages))
+
+        return password
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email')
-
-
-class LoginUserSerializer(serializers.Serializer):
-    email = serializers.CharField()
-    password = serializers.CharField()
-
-    def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
-        if not authenticate(email=email, password=password):
-            raise ValidationError('wrong email or password')
-        return attrs

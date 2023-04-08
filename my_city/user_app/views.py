@@ -1,11 +1,9 @@
-from django.shortcuts import get_object_or_404
+import knox.auth
 from knox.models import AuthToken
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 
-from .models import User
-from .serializers import (CreateUserSerializer, LoginUserSerializer,
-                          UserSerializer)
+from .serializers import CreateUserSerializer, UserSerializer
 
 token_index = 1
 
@@ -23,19 +21,8 @@ class RegistrationAPI(generics.GenericAPIView):
         })
 
 
-class LoginAPI(generics.GenericAPIView):
-    serializer_class = LoginUserSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = get_object_or_404(User, email=serializer.data['email'])
-        return Response({
-            "token": AuthToken.objects.create(user)[token_index]
-        })
-
-
 class UserAPI(generics.RetrieveAPIView):
+    authentication_classes = [knox.auth.TokenAuthentication, ]
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = UserSerializer
 
