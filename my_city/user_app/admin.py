@@ -23,8 +23,3 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(m.Member)
 class MemberAdmin(admin.ModelAdmin):
     pass
-
-
-@admin.register(m.TeamMembership)
-class TeamMembershipAdmin(admin.ModelAdmin):
-    pass

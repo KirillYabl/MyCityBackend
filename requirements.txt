@@ -5,7 +5,9 @@ django-debug-toolbar
 Faker
 flake8
 flake8-isort
+django-dbbackup
 djangorestframework==3.14.0
+drf-nested-routers
 django-filter
 drf_yasg
 django-phonenumber-field[phonenumbers]==7.0.*

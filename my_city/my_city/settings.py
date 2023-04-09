@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_cleanup.apps.CleanupConfig',
     'knox',
+    'dbbackup',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +152,7 @@ AUTH_USER_MODEL = 'user_app.User'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# backups
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'dbbackups'}
