@@ -95,7 +95,7 @@ class Member(models.Model):
         verbose_name='команда',
         on_delete=models.PROTECT,
         to=Team,
-        related_name='_members',
+        related_name='members',
     )
     member_number = models.PositiveSmallIntegerField(
         'номер участника в команде',
@@ -105,6 +105,9 @@ class Member(models.Model):
     class Meta:
         verbose_name = 'участник'
         verbose_name_plural = 'участники'
+        unique_together = (
+            ('team', 'member_number'),
+        )
 
     def __str__(self):
         return f'{self.full_name} ({self.birth_date})'
