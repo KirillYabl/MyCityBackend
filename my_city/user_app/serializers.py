@@ -1,9 +1,10 @@
 from collections import defaultdict
 
 from django.contrib.auth import password_validation, get_user_model
+from django.conf import settings
+from django.core import exceptions
 from django.db.transaction import atomic
 from rest_framework import serializers
-from django.core import exceptions
 
 from .models import Team, Member
 
@@ -64,7 +65,10 @@ class CreateUserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         error_messages = []
         email = attrs['email']
-        captain_email = sorted(attrs['members'], key=lambda x: x['member_number'])[0]['email']
+        try:
+            captain_email = sorted(attrs['members'], key=lambda x: x['member_number'])[0]['email']
+        except IndexError:
+            captain_email = ''
 
         if email != captain_email:
             error_messages.append(
@@ -77,10 +81,10 @@ class CreateUserSerializer(serializers.ModelSerializer):
         # это проверки про members, но они здесь, потому что они не относятся к какому-то
         # конкретному участнику команды и должны иметь свой лейбл
         members = attrs['members']
-        if len(members) < 2 or len(members) > 5:
+        if len(members) < settings.MIN_MEMBERS_IN_TEAM or len(members) > settings.MAX_MEMBERS_IN_TEAM:
             error_messages.append(
                 exceptions.ValidationError(
-                    'Число участников должно быть от 2 до 5',
+                    f'Число участников должно быть от {settings.MIN_MEMBERS_IN_TEAM} до {settings.MAX_MEMBERS_IN_TEAM}',
                     code='wrong_members_count'
                 ),
             )
@@ -130,7 +134,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
     def validate_members(self, members):
         error_messages = [{} for _ in members]
         captain_number = 1
-        email_phone_required_numbers = list(range(1, 3))
+        email_phone_required_numbers = list(range(1, settings.MIN_MEMBERS_IN_TEAM + 1))
         member_names_and_birthdates = set()
         for member_index, member in enumerate(members):
             member_errors = defaultdict(list)

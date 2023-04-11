@@ -25,6 +25,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', '0.0.0.0'])
 
 POSTGRES_DB_URL = env.str('POSTGRES_DB_URL')
 
+MIN_MEMBERS_IN_TEAM = env.int('MIN_MEMBERS_IN_TEAM', 2)
 MAX_MEMBERS_IN_TEAM = env.int('MAX_MEMBERS_IN_TEAM', 5)
 
 # Application definition

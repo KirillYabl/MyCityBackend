@@ -26,6 +26,8 @@ POSTGRES_DB=DB_NAME
 POSTGRES_USER=USER_NAME
 POSTGRES_PASSWORD=DB_PASSWORD
 PGDATA=/var/lib/postgresql/data/pgdata
+MIN_MEMBERS_IN_TEAM=2
+MAX_MEMBERS_IN_TEAM=5
 ```
 
 Запустить БД в отдельном окне терминала из корневой папки проекта
