@@ -91,46 +91,23 @@ class Member(models.Model):
     phone = PhoneNumberField('номер телефона', region='RU', blank=True)
     email = models.EmailField('email', blank=True)
     is_captain = models.BooleanField('признак капитана')
-    team = models.ManyToManyField(
+    team = models.ForeignKey(
         verbose_name='команда',
+        on_delete=models.PROTECT,
         to=Team,
-        through='TeamMembership',
         related_name='members',
+    )
+    member_number = models.PositiveSmallIntegerField(
+        'номер участника в команде',
+        validators=[MinValueValidator(1), MaxValueValidator(settings.MAX_MEMBERS_IN_TEAM)],
     )
 
     class Meta:
         verbose_name = 'участник'
         verbose_name_plural = 'участники'
-
-    def __str__(self):
-        return f'{self.full_name} ({self.birth_date})'
-
-
-class TeamMembership(models.Model):
-    team = models.ForeignKey(
-        verbose_name='команда',
-        to=Team,
-        on_delete=models.CASCADE,
-        related_name='memberships',
-    )
-    member = models.ForeignKey(
-        verbose_name='участник',
-        to=Member,
-        on_delete=models.CASCADE,
-        related_name='memberships',
-    )
-    member_number = models.PositiveSmallIntegerField(
-        'номер участника в команде',
-        validators=[MinValueValidator(1), MaxValueValidator(settings.MAX_MEMBERS_IN_TEAM)]
-    )
-
-    class Meta:
-        verbose_name = 'членство в команде'
-        verbose_name_plural = 'членства в командах'
         unique_together = (
-            ('team', 'member'),
-            ('team', 'member', 'member_number'),
+            ('team', 'member_number'),
         )
 
     def __str__(self):
-        return f'{self.team} - {self.member} ({self.member_number})'
+        return f'{self.full_name} ({self.birth_date})'

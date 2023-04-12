@@ -25,6 +25,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', '0.0.0.0'])
 
 POSTGRES_DB_URL = env.str('POSTGRES_DB_URL')
 
+MIN_MEMBERS_IN_TEAM = env.int('MIN_MEMBERS_IN_TEAM', 2)
 MAX_MEMBERS_IN_TEAM = env.int('MAX_MEMBERS_IN_TEAM', 5)
 
 # Application definition
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_cleanup.apps.CleanupConfig',
     'knox',
+    'dbbackup',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +153,7 @@ AUTH_USER_MODEL = 'user_app.User'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+# backups
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'dbbackups'}
