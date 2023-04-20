@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .choices import QuestStatus
-from .models import Quest, Category
+from .models import Quest, Category, FAQ
 
 
 class QuestSerializer(serializers.ModelSerializer):
@@ -33,4 +33,13 @@ class CategorySerializer(serializers.ModelSerializer):
             'long_description',
             'participation_order',
             'results_order',
+        )
+
+class FAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FAQ
+        fields = (
+            'question',
+            'answer',
+            'order',
         )
