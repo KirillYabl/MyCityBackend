@@ -15,7 +15,6 @@ from user_app.models import (
     User,
     Team,
     Member,
-    TeamMembership,
 )
 
 
@@ -39,7 +38,7 @@ class Command(BaseCommand):
         FAQ.objects.filter(question__contains='TEST').delete()
         Contact.objects.filter(contact_type__name__contains='TEST').delete()
         ContactType.objects.filter(name__contains='TEST').delete()
-        Member.objects.filter(memberships__team__captain__id__in=test_user_ids).delete()
+        Member.objects.filter(team__captain__id__in=test_user_ids).delete()
         Team.objects.filter(captain__id__in=test_user_ids).delete()
         User.objects.filter(id__in=test_user_ids).delete()
 
