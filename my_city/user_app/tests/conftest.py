@@ -187,3 +187,10 @@ def error_registration_wrong_members_general_captain_data():
         }
     ]
     return wrong_data
+
+
+@pytest.fixture
+def error_registration_invalid_full_name():
+    wrong_data = copy.deepcopy(SUCCESS_DATA)
+    wrong_data['members'][1]['full_name'] = 'Иван Григорьевичasd'
+    return wrong_data

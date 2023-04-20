@@ -83,7 +83,7 @@ class Member(models.Model):
         'ФИО',
         max_length=256,
         validators=[RegexValidator(
-            regex=r'^[ёЁа-яА-ЯA-Za-z-]+( [ёЁа-яА-ЯA-Za-z-]+){1,4}$',  # words with dash (min 1) split with only 1 space
+            regex=r'^[ёЁа-яА-Я-]+( [ёЁа-яА-Я-]+){1,4}$',  # words with dash (min 1) split with only 1 space
             message='ФИО должно содержать обязательно фамилию и имя и состоять только из русских букв'
         )],
     )
