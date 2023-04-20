@@ -1,25 +1,3 @@
-"""Теперь напиши пожалуйста менеджемент команду для django, которая умеет
-1. Заполнять тестовую БД фуковыми данными, с помощью библиотеки Faker
-2. Удалять ранее заполненную БД (только тестовые данные удаляются)
-3. Обновлять БД (объединение второй и первой операции в одну)
-
-Количество фейковых записей по таблицам:
-    User - 100
-    Team - 100 (по 1 для каждого юзера)
-    Member - по 2-5 на каждую команду (у 2 игроков (капитан и второй игрок) обязательно должны быть заполнены телефоны и email, у остальных не обязательно, обязательно в команде есть капитан). Тут же создавай связь в таблице TeamMembership, у капитана первый номер, у второго учатсника второй и так далее.
-    ContactType - 2
-    Contact - 5
-    FAQ- 7
-    Quest - 3
-Активный квест - start_at < now < end_at
-Прошедщий квест - end_at < now < stop_show_at
-Прошедщий квест - end_at < now < stop_show_at
-причем registration_start_at < start_at < end_at < stop_show_at
-    Category - 15 (по 5 в каждом квесте). Когда создаешь категорию, добавляй в нее команду по следующим ограничениям: одна команда участвует только в одной случайно категории из квеста, которому принадлежат категории, команда может вообще не участвовать ни в одной категори квеста. Сделай так, что бы в каждом квесте участвовало около половины команд.
-    AnswerType - 3 (строковый, числовой и дата)
-    Assignment - 225 (по 15 в каждой категории)
-    AnswerAttempt - от 10 до 100 для каждого Assignment (одна команда может давать только 1 ответ на один задание, но может и не давать). Ответ на задание могут давать только те команды, которые участвуют в категори, которой принаджежит задание
-"""
 import os
 import random
 
@@ -41,7 +19,6 @@ from user_app.models import (
     User,
     Team,
     Member,
-    TeamMembership,
 )
 
 
@@ -57,7 +34,6 @@ class Command(BaseCommand):
         users = []
         teams = []
         members = []
-        team_memberships = []
         for user_i in range(100):
             email = fake_us.unique.email()
             password = fake_us.unique.password()
@@ -85,10 +61,10 @@ class Command(BaseCommand):
                     birth_date=fake_ru.date_of_birth(minimum_age=10, maximum_age=70),
                     phone=phone,
                     email=email,
+                    member_number=member_i + 1,
+                    team=team,
                 )
                 members.append(member)
-                team_membership = TeamMembership.objects.create(team=team, member=member, member_number=member_i + 1)
-                team_memberships.append(team_membership)
 
         # Создание типов контактов и контактов
         contact_types = []
