@@ -153,6 +153,19 @@ class TestRegistrationAPI:
         assert 'email' in data
         assert 'пользователь with this email address already exists.' in data['email']
 
+    def test_invalid_full_name(self, error_registration_invalid_full_name):
+        users_cnt = User.objects.count()
+        teams_cnt = Team.objects.count()
+        members_cnt = Member.objects.count()
+        response = APIClient().post(reverse('registration'), data=error_registration_invalid_full_name, format='json')
+        assert response.status_code == 400
+        assert User.objects.count() == users_cnt
+        assert Team.objects.count() == teams_cnt
+        assert Member.objects.count() == members_cnt
+        data = response.json()
+        assert len(data['members']) == 2
+        assert 'full_name' in data['members'][1]
+
 
 @pytest.mark.django_db
 class TestUserAPI:
