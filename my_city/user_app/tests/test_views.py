@@ -17,7 +17,7 @@ class TestRegistrationAPI:
         assert response.status_code == 200
         assert User.objects.count() == users_cnt + 1
         assert Team.objects.count() == teams_cnt + 1
-        assert Member.objects.count() == members_cnt + len(success_registration_data['members'])
+        assert Member.objects.count() == members_cnt + len(success_registration_data['team']['members'])
         new_user = User.objects.get(email=success_registration_data['email'])
         data = response.json()
         assert 'user' in data
@@ -37,13 +37,14 @@ class TestRegistrationAPI:
         assert Team.objects.count() == teams_cnt
         assert Member.objects.count() == members_cnt
         data = response.json()
+        members = data['team']['members']
         assert 'This field may not be blank.' in data['email']
         assert 'This field may not be blank.' in data['password']
         assert 'This field may not be blank.' in data['team']['name']
-        assert 'This field is required.' in data['members'][0]['full_name']
-        assert 'This field is required.' in data['members'][0]['birth_date']
-        assert 'This field is required.' in data['members'][0]['is_captain']
-        assert 'This field is required.' in data['members'][0]['member_number']
+        assert 'This field is required.' in members[0]['full_name']
+        assert 'This field is required.' in members[0]['birth_date']
+        assert 'This field is required.' in members[0]['is_captain']
+        assert 'This field is required.' in members[0]['member_number']
 
     def test_first_invalid_data(self, error_registration_wrong_first_data):
         users_cnt = User.objects.count()
@@ -55,19 +56,20 @@ class TestRegistrationAPI:
         assert Team.objects.count() == teams_cnt
         assert Member.objects.count() == members_cnt
         data = response.json()
+        members = data['team']['members']
         assert 'Enter a valid email address.' in data['email']
         assert 'Ensure this field has at least 8 characters.' in data['password']
         assert 'name' in data['team']
-        assert len(data['members']) == 2
-        assert 'full_name' in data['members'][0]
-        assert 'birth_date' in data['members'][0]
-        assert 'phone' in data['members'][0]
-        assert 'is_captain' in data['members'][0]
-        assert 'member_number' in data['members'][0]
-        assert 'full_name' in data['members'][1]
-        assert 'phone' in data['members'][1]
-        assert 'email' in data['members'][1]
-        assert 'member_number' in data['members'][1]
+        assert len(members) == 2
+        assert 'full_name' in members[0]
+        assert 'birth_date' in members[0]
+        assert 'phone' in members[0]
+        assert 'is_captain' in members[0]
+        assert 'member_number' in members[0]
+        assert 'full_name' in members[1]
+        assert 'phone' in members[1]
+        assert 'email' in members[1]
+        assert 'member_number' in members[1]
 
     def test_second_invalid_data(self, error_registration_wrong_second_data):
         users_cnt = User.objects.count()
@@ -79,14 +81,15 @@ class TestRegistrationAPI:
         assert Team.objects.count() == teams_cnt
         assert Member.objects.count() == members_cnt
         data = response.json()
-        assert len(data['members']) == 4
-        assert 'is_captain' in data['members'][0]
-        assert 'phone' in data['members'][0]
-        assert 'phone' in data['members'][1]
-        assert 'email' in data['members'][1]
-        assert 'is_captain' in data['members'][2]
-        assert 'full_name' in data['members'][2]
-        assert 'full_name' in data['members'][3]
+        members = data['team']['members']
+        assert len(members) == 4
+        assert 'is_captain' in members[0]
+        assert 'phone' in members[0]
+        assert 'phone' in members[1]
+        assert 'email' in members[1]
+        assert 'is_captain' in members[2]
+        assert 'full_name' in members[2]
+        assert 'full_name' in members[3]
 
     def test_members_general_other_invalid_data(self, error_registration_wrong_members_general_other_data):
         users_cnt = User.objects.count()
@@ -132,7 +135,7 @@ class TestRegistrationAPI:
         assert response.status_code == 200
         users_cnt += 1
         teams_cnt += 1
-        members_cnt += len(success_registration_data['members'])
+        members_cnt += len(success_registration_data['team']['members'])
         assert User.objects.count() == users_cnt
         assert Team.objects.count() == teams_cnt
         assert Member.objects.count() == members_cnt
@@ -163,8 +166,9 @@ class TestRegistrationAPI:
         assert Team.objects.count() == teams_cnt
         assert Member.objects.count() == members_cnt
         data = response.json()
-        assert len(data['members']) == 2
-        assert 'full_name' in data['members'][1]
+        members = data['team']['members']
+        assert len(members) == 2
+        assert 'full_name' in members[1]
 
 
 @pytest.mark.django_db

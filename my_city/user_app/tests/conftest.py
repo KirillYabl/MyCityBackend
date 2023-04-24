@@ -8,35 +8,35 @@ SUCCESS_DATA = {
     "email": "vasya@mail.ru",
     "password": "asd@$124Dsfd2",
     "team": {
-        "name": "teamsdfkjskjsgb"
+        "name": "teamsdfkjskjsgb",
+        "members": [
+            {
+                "full_name": "Василий Петрович",
+                "birth_date": "1978-02-15",
+                "phone": "+79003457896",
+                "email": "vasya@mail.ru",
+                "is_captain": True,
+                "member_number": 1
+            },
+            {
+                "full_name": "Иван Григорьевич",
+                "birth_date": "1975-02-15",
+                "phone": "+79003452896",
+                "email": "vasaya@mail.ru",
+                "is_captain": False,
+                "member_number": 2
+            }
+        ]
     },
-    "members": [
-        {
-            "full_name": "Василий Петрович",
-            "birth_date": "1978-02-15",
-            "phone": "+79003457896",
-            "email": "vasya@mail.ru",
-            "is_captain": True,
-            "member_number": 1
-        },
-        {
-            "full_name": "Иван Григорьевич",
-            "birth_date": "1975-02-15",
-            "phone": "+79003452896",
-            "email": "vasaya@mail.ru",
-            "is_captain": False,
-            "member_number": 2
-        }
-    ]
 }
 
 EMPTY_DATA = {
     "email": "",
     "password": "",
     "team": {
-        "name": ""
+        "name": "",
+        "members": [{}]
     },
-    "members": [{}]
 }
 
 
@@ -55,8 +55,8 @@ def error_registration_wrong_first_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['email'] = "vasyaru"
     wrong_data['password'] = "vasya"
-    wrong_data['team'] = {"name": "teamsd   fkjskjsgb"}
-    wrong_data['members'] = [
+    wrong_data['team']['name'] = "teamsd   fkjskjsgb"
+    wrong_data['team']['members'] = [
         {
             "full_name": "vasya",
             "birth_date": "197815",
@@ -80,7 +80,7 @@ def error_registration_wrong_first_data():
 @pytest.fixture
 def error_registration_wrong_second_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
-    wrong_data['members'] = [
+    wrong_data['team']['members'] = [
         {
             "full_name": "Василий Петрович",
             "birth_date": "1978-02-15",
@@ -120,7 +120,7 @@ def error_registration_wrong_second_data():
 @pytest.fixture
 def error_registration_wrong_members_general_other_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
-    wrong_data['members'] = [
+    wrong_data['team']['members'] = [
         {
             "full_name": "Василий Петрович",
             "birth_date": "1978-02-01",
@@ -176,7 +176,7 @@ def error_registration_wrong_members_general_other_data():
 @pytest.fixture
 def error_registration_wrong_members_general_captain_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
-    wrong_data['members'] = [
+    wrong_data['team']['members'] = [
         {
             "full_name": "Василий Петрович",
             "birth_date": "1978-02-15",
@@ -192,5 +192,5 @@ def error_registration_wrong_members_general_captain_data():
 @pytest.fixture
 def error_registration_invalid_full_name():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
-    wrong_data['members'][1]['full_name'] = 'Иван Григорьевичasd'
+    wrong_data['team']['members'][1]['full_name'] = 'Иван Григорьевичasd'
     return wrong_data

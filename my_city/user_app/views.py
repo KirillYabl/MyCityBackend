@@ -1,16 +1,19 @@
 import knox.auth
+from django.contrib.auth import get_user_model
 from knox.models import AuthToken
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 
-from .serializers import CreateUserSerializer, UserSerializer
+from .serializers import ComplexUserSerializer, UserSerializer
+
+User = get_user_model()
 
 token_index = 1
 
 
 class RegistrationAPI(generics.GenericAPIView):
     """"Регистрация команды."""
-    serializer_class = CreateUserSerializer
+    serializer_class = ComplexUserSerializer
 
     def post(self, request, *args, **kwargs):
         """Регистрация команды.
@@ -50,10 +53,8 @@ class RegistrationAPI(generics.GenericAPIView):
         })
 
 
-class UserAPI(generics.RetrieveAPIView):
+class UserAPI(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [knox.auth.TokenAuthentication, ]
     permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = UserSerializer
-
-    def get_object(self):
-        return self.request.user
+    serializer_class = ComplexUserSerializer
+    queryset = User.objects.prefetch_related('team', 'team__members')

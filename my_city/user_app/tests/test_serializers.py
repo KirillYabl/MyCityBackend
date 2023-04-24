@@ -1,8 +1,7 @@
 import pytest
-from django.utils import timezone
 
 from user_app.models import User, Member, Team
-from user_app.serializers import UserSerializer, TeamSerializer, MemberSerializer, CreateUserSerializer
+from user_app.serializers import UserSerializer, TeamSerializer, MemberSerializer, ComplexUserSerializer
 
 
 @pytest.mark.django_db
@@ -22,10 +21,20 @@ class TestTeamSerializer:
         team_name = 'team1'
         user = User.objects.create_user('test@mail.ru', 'sd#f35DGD3!d$%')
         team = Team.objects.create(name=team_name, captain=user)
+        Member.objects.create(
+            full_name='Иванов Иван',
+            birth_date='2016-09-17',
+            phone='+79054980738',
+            email='test@mail.ru',
+            is_captain=True,
+            member_number=1,
+            team=team,
+        )
         serializer = TeamSerializer(team)
         data = serializer.data
         assert data['id'] == team.id
         assert data['name'] == team_name
+        assert len(data['members']) == 1
 
 
 @pytest.mark.django_db
@@ -60,36 +69,36 @@ class TestMemberSerializer:
 
 
 @pytest.mark.django_db
-class TestCreateUserSerializer:
-    def test_create_user_serializer(self):
+class TestComplexUserSerializer:
+    def test_complex_user_serializer(self):
         data = {
             "email": "vasya@mail.ru",
             "password": "asd@$124Dsfd2",
             "team": {
-                "name": "teamsdfkjskjsgb"
+                "name": "teamsdfkjskjsgb",
+                "members": [
+                    {
+                        "full_name": "Василий Петрович",
+                        "birth_date": "1978-02-15",
+                        "phone": "+79003457896",
+                        "email": "vasya@mail.ru",
+                        "is_captain": True,
+                        "member_number": 1
+                    },
+                    {
+                        "full_name": "Иван Григорьевич",
+                        "birth_date": "1975-02-15",
+                        "phone": "+79003452896",
+                        "email": "vasaya@mail.ru",
+                        "is_captain": False,
+                        "member_number": 2
+                    }
+                ]
             },
-            "members": [
-                {
-                    "full_name": "Василий Петрович",
-                    "birth_date": "1978-02-15",
-                    "phone": "+79003457896",
-                    "email": "vasya@mail.ru",
-                    "is_captain": True,
-                    "member_number": 1
-                },
-                {
-                    "full_name": "Иван Григорьевич",
-                    "birth_date": "1975-02-15",
-                    "phone": "+79003452896",
-                    "email": "vasaya@mail.ru",
-                    "is_captain": False,
-                    "member_number": 2
-                }
-            ]
         }
 
-        serializer = CreateUserSerializer(data=data)
+        serializer = ComplexUserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         assert serializer.data['email'] == "vasya@mail.ru"
         assert serializer.data['team']['name'] == "teamsdfkjskjsgb"
-        assert len(serializer.data['members']) == 2
+        assert len(serializer.data['team']['members']) == 2
