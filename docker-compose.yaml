@@ -1,11 +1,23 @@
 version: "3.9"
 services:
-  postgres: # https://habr.com/ru/post/578744/
+  db:
     image: postgres:14.6-alpine
     volumes:
-      - .:/var/lib/postgresql/data
+      - ./pgdata/:/var/lib/postgresql/data/
     env_file:
       - ./my_city/my_city/.env
     ports:
-      - "5432:5432"
+      - 5432:5432
     restart: unless-stopped
+
+  api:
+    build: .
+    volumes:
+      - ./my_city/:/usr/src/app/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file:
+      - ./my_city/my_city/.env
+    command: python manage.py runserver 0.0.0.0:8000
