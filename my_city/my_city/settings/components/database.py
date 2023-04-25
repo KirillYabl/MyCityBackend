@@ -1,6 +1,6 @@
 import dj_database_url
 
-from . import environ_env
+from my_city.settings.env import environ_env
 
 POSTGRES_DB_URL = environ_env.str('POSTGRES_DB_URL')
 

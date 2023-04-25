@@ -1,9 +1,14 @@
 from split_settings.tools import include
-from os import environ
+
+from my_city.settings.env import environ_env
 
 DEVELOPMENT_ENV = 'development'
+PRODUCTION_ENV = 'production'
 
-ENV = environ.get('DJANGO_ENV') or DEVELOPMENT_ENV
+ENV = environ_env.str('DJANGO_ENV')
+
+if ENV is None:
+    raise ValueError('DJANGO_ENV environment variable is not set"')
 
 base_settings = [
     'components/common.py',

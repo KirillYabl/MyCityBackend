@@ -1,4 +1,5 @@
-from my_city.settings.components import BASE_DIR, environ_env
+from my_city.settings.components import BASE_DIR
+from my_city.settings.env import environ_env
 
 SECRET_KEY = environ_env.str('DJANGO_SECRET_KEY')
 
