@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-from .settings import DEBUG, MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL
+from my_city.settings import ENV, DEVELOPMENT_ENV, MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -29,10 +29,12 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/questapp/', include('quest_app.urls')),
 ]
+
 urlpatterns += static(STATIC_URL, document_root=STATIC_ROOT)
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)
 
-if DEBUG:
+
+if ENV == DEVELOPMENT_ENV:
     import debug_toolbar
 
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
