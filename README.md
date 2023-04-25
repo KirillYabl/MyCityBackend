@@ -10,7 +10,7 @@
 
 Данный репозиторий - API для сайта "Мой город". Квест-игра имеет большую историю с 2005 года и сейчас организаторам потребовалось "осовременить" техническую часть, т.к. координировать мероприятие при текущем количестве участников становится затруднительно.
 
-## Как установить
+## Как установить на Windows
 
 Должны быть установлены следующие программы
 1. Python 3.9+
@@ -81,6 +81,43 @@ python manage.py runserver
 ```shell
 pytest
 ```
+
+## Как запустить на Unix/MacOS
+
+Скачать репозиторий:
+```bash
+git clone https://github.com/KirillYabl/MyCityBackend.git
+```
+
+В папке `./my_city/my_city` создать файл `.env` со следующим содержанием:
+
+```text
+DJANGO_SECRET_KEY=REPLACE_ME
+POSTGRES_DB_URL=postgres://USER_NAME:DB_PASSWORD@localhost:5432/DB_NAME
+POSTGRES_DB=DB_NAME
+POSTGRES_USER=USER_NAME
+POSTGRES_PASSWORD=DB_PASSWORD
+PGDATA=/var/lib/postgresql/data/pgdata
+MIN_MEMBERS_IN_TEAM=2
+MAX_MEMBERS_IN_TEAM=5
+```
+
+Создать виртуальное окружение, установить зависимости и запустить сервер, выполнив команды:
+
+```bash
+make venv
+make install-dev
+make db_up
+make migrate
+make fill_db
+make run
+```
+
+Запустить тесты:
+```bash
+make tests
+```
+
 
 ## Используемые технологии
 1. Python
