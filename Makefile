@@ -22,4 +22,7 @@ fill_db:
 drop_test_db:
 	docker compose run --rm api sh -c './manage.py drop_test_data'
 
-.PHONY: venv
+tests:
+	docker compose exec api pytest
+
+.PHONY: venv tests
