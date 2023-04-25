@@ -10,7 +10,7 @@
 
 Данный репозиторий - API для сайта "Мой город". Квест-игра имеет большую историю с 2005 года и сейчас организаторам потребовалось "осовременить" техническую часть, т.к. координировать мероприятие при текущем количестве участников становится затруднительно.
 
-## Как установить на Windows
+## Как запустить
 
 Должны быть установлены следующие программы
 1. Python 3.9+
@@ -19,24 +19,30 @@
 
 В папке `./my_city/my_city` создать файл `.env` со следующим содержанием:
 
+### .env:
 ```text
 DJANGO_SECRET_KEY=REPLACE_ME
-DJANGO_ENV=development
-POSTGRES_DB_URL=postgres://USER_NAME:DB_PASSWORD@localhost:5432/DB_NAME
-POSTGRES_DB=DB_NAME
-POSTGRES_USER=USER_NAME
+POSTGRES_DB_URL=postgres://USER_NAME:DB_PASSWORD@db:5432/DB_NAME
+POSTGRES_NAME=DB_NAME
 POSTGRES_PASSWORD=DB_PASSWORD
+POSTGRES_USER=USER_NAME
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
 PGDATA=/var/lib/postgresql/data/pgdata
 MIN_MEMBERS_IN_TEAM=2
 MAX_MEMBERS_IN_TEAM=5
+DJANGO_SETTINGS_MODULE=my_city.settings
+DJANGO_ENV=development
+MAX_MEMBERS_IN_TEAM=5
 ```
 
-Запустить БД в отдельном окне терминала из корневой папки проекта
+Запустить БД из корневой папки проекта:
 ```shell
-docker-compose up
+docker-compose run --rm -d db # запуск
+docker-compose stop db # остановка
 ```
 
-В другом окне терминала создать виртуальное окружение в корневой папке проекта
+Создать виртуальное окружение в корневой папке проекта
 
 ```shell
 python -m venv venv
@@ -45,7 +51,7 @@ python -m venv venv
 Установить зависимости
 
 ```shell
-pip install -r requirements.txt
+pip install -r dev-requirements.txt
 ```
 
 Перейти в папку `my_city` и выполнить миграции
@@ -83,41 +89,31 @@ python manage.py runserver
 pytest
 ```
 
-## Как запустить на Unix/MacOS
+## Как запустить, используя Docker
+Заполнить `my_city/my_city/.env`, как описано [тут](#env)
 
-Скачать репозиторий:
+
+Сбилдить:
 ```bash
-git clone https://github.com/KirillYabl/MyCityBackend.git
+make build
 ```
 
-В папке `./my_city/my_city` создать файл `.env` со следующим содержанием:
-
-```text
-DJANGO_SECRET_KEY=REPLACE_ME
-DJANGO_ENV=development
-POSTGRES_DB_URL=postgres://USER_NAME:DB_PASSWORD@localhost:5432/DB_NAME
-POSTGRES_DB=DB_NAME
-POSTGRES_USER=USER_NAME
-POSTGRES_PASSWORD=DB_PASSWORD
-PGDATA=/var/lib/postgresql/data/pgdata
-MIN_MEMBERS_IN_TEAM=2
-MAX_MEMBERS_IN_TEAM=5
-```
-
-Создать виртуальное окружение, установить зависимости и запустить сервер, выполнив команды:
+Запустить/остановить контейнеры:
 
 ```bash
-make venv
-make install-dev
-make db_up
+make up # запуск
+make down # остановка
+```
+
+Выполнить миграции:
+```bash
 make migrate
-make fill_db
-make run
 ```
 
-Запустить тесты:
+Заполнить/очистить БД тестовыми данными:
 ```bash
-make tests
+make fill_db # заполнение
+make drop_test_db # очистка
 ```
 
 
