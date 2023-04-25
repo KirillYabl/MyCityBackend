@@ -19,3 +19,4 @@ django-rest-knox==4.2.*
 django-split-settings==1.2.0
 pytest-django==4.5.2
 django-cors-headers==3.14.0
+ruff==0.0.263
