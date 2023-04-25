@@ -17,7 +17,7 @@ fill_db:
 	my_city/manage.py fill_test_data
 
 drop_test_db:
-	my_city/manana.py drop_test_db
+	my_city/manage.py drop_test_data
 
 tests:
 	cd my_city && pytest .
