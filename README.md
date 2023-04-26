@@ -34,6 +34,7 @@ MAX_MEMBERS_IN_TEAM=5
 DJANGO_SETTINGS_MODULE=my_city.settings
 DJANGO_ENV=development
 MAX_MEMBERS_IN_TEAM=5
+ALLOWED_HOSTS='127.0.0.1,0.0.0.0'
 ```
 
 Запустить БД из корневой папки проекта:
@@ -89,31 +90,57 @@ python manage.py runserver
 pytest
 ```
 
+## Как запустить линтер
+
+```shell
+ruff check ./my_city
+```
+
+## Как отформатировать импорты
+```shell
+ruff --select I ./my_city --fix
+```
+
 ## Как запустить, используя Docker
 Заполнить `my_city/my_city/.env`, как описано [тут](#env)
 
 
 Сбилдить:
-```bash
+```shell
 make build
 ```
 
 Запустить/остановить контейнеры:
 
-```bash
+```shell
 make up # запуск
 make down # остановка
 ```
 
 Выполнить миграции:
-```bash
+```shell
 make migrate
 ```
 
 Заполнить/очистить БД тестовыми данными:
-```bash
+```shell
 make fill_db # заполнение
 make drop_test_db # очистка
+```
+
+Запустить тесты:
+```shell
+make tests
+```
+
+Запустить линтер:
+```shell
+make lint
+```
+
+Запустить isort(отформатирует импорты):
+```shell
+make isort
 ```
 
 
