@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .choices import QuestStatus
-from .models import Quest, Category
+from .models import Category, Quest
 
 
 class QuestSerializer(serializers.ModelSerializer):

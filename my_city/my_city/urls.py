@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-from my_city.settings import ENV, DEVELOPMENT_ENV, MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL
+from my_city.settings import DEVELOPMENT_ENV, ENV, MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL
 
 schema_view = get_schema_view(
     openapi.Info(

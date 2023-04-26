@@ -8,23 +8,63 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='AnswerAttempt',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('photo', sorl.thumbnail.fields.ImageField(blank=True, null=True, upload_to='answers', verbose_name='фото подтверждение')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
+                (
+                    'photo',
+                    sorl.thumbnail.fields.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to='answers',
+                        verbose_name='фото подтверждение',
+                    ),
+                ),
                 ('answer', models.CharField(max_length=256, verbose_name='ответ')),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now, verbose_name='создано')),
-                ('auto_result', models.BooleanField(db_index=True, verbose_name='результат через алгоритм')),
-                ('prevent_result', models.BooleanField(blank=True, db_index=True, help_text='проставить "да", если после ручной сверки выявлено, что алгоритм ошибся, "да" или "нет" в этом поле важнее, чем в поле "результат через алгоритм". Менять правильность ответа нужно именно в этом поле, т.к. поле "результат через алгоритм" может быть автоматически пересчитано, а это поле нет', null=True, verbose_name='превентивный результат')),
-                ('not_sure', models.BooleanField(db_index=True, default=False, help_text='проставляется как "да", если алгоритм не был уверен, что ответ правильный на 100%', verbose_name='признак возможного ложного срабатывания')),
+                (
+                    'created_at',
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name='создано'),
+                ),
+                (
+                    'auto_result',
+                    models.BooleanField(db_index=True, verbose_name='результат через алгоритм'),
+                ),
+                (
+                    'prevent_result',
+                    models.BooleanField(
+                        blank=True,
+                        db_index=True,
+                        help_text='проставить "да", если после ручной сверки выявлено,\
+                            что алгоритм ошибся, "да" или "нет" в этом поле важнее,\
+                                чем в поле "результат через алгоритм". Менять правильность\
+                                    ответа нужно именно в этом поле, т.к. поле "результат через\
+                                        алгоритм" может быть автоматически пересчитано,\
+                                            а это поле нет',
+                        null=True,
+                        verbose_name='превентивный результат',
+                    ),
+                ),
+                (
+                    'not_sure',
+                    models.BooleanField(
+                        db_index=True,
+                        default=False,
+                        help_text='проставляется как "да", если алгоритм не был уверен, что ответ\
+                            правильный на 100%',
+                        verbose_name='признак возможного ложного срабатывания',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'попытка ответа',
@@ -34,8 +74,21 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AnswerType',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='осторожно, не удаляйте и не добавляйте новые типы ответов без разработчика!', max_length=64, verbose_name='наименование типа ответа')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(
+                        help_text='осторожно, не удаляйте и не добавляйте новые типы ответов\
+                            без разработчика!',
+                        max_length=64,
+                        verbose_name='наименование типа ответа',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'тип ответа',
@@ -45,13 +98,50 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Assignment',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('picture', sorl.thumbnail.fields.ImageField(upload_to='assignments', verbose_name='картинка для задания')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
+                (
+                    'picture',
+                    sorl.thumbnail.fields.ImageField(
+                        upload_to='assignments', verbose_name='картинка для задания',
+                    ),
+                ),
                 ('question', models.TextField(verbose_name='вопрос')),
-                ('answer', models.CharField(help_text='если это дата, то указывайте в формате ДД.ММ.ГГГГ', max_length=256, verbose_name='правильный ответ')),
-                ('is_enumeration', models.BooleanField(default=False, verbose_name='признак ответа с перечислением')),
-                ('enumeration_sep', models.CharField(default=',', help_text='применяется только для ответов с перечислением', max_length=8, verbose_name='разделитель для перечисления')),
-                ('skip_symbols', models.CharField(blank=True, max_length=256, verbose_name='символы для пропуска в ответах юзеров')),
+                (
+                    'answer',
+                    models.CharField(
+                        help_text='если это дата, то указывайте в формате ДД.ММ.ГГГГ',
+                        max_length=256,
+                        verbose_name='правильный ответ',
+                    ),
+                ),
+                (
+                    'is_enumeration',
+                    models.BooleanField(
+                        default=False, verbose_name='признак ответа с перечислением',
+                    ),
+                ),
+                (
+                    'enumeration_sep',
+                    models.CharField(
+                        default=',',
+                        help_text='применяется только для ответов с перечислением',
+                        max_length=8,
+                        verbose_name='разделитель для перечисления',
+                    ),
+                ),
+                (
+                    'skip_symbols',
+                    models.CharField(
+                        blank=True,
+                        max_length=256,
+                        verbose_name='символы для пропуска в ответах юзеров',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'задание',
@@ -61,8 +151,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ContactType',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=64, verbose_name='наименование типа контакта')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
+                (
+                    'name',
+                    models.CharField(max_length=64, verbose_name='наименование типа контакта'),
+                ),
             ],
             options={
                 'verbose_name': 'тип контакта',
@@ -72,10 +170,22 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FAQ',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
                 ('question', models.TextField(unique=True, verbose_name='вопрос')),
                 ('answer', models.TextField(verbose_name='ответ')),
-                ('order', models.PositiveSmallIntegerField(unique=True, validators=[django.core.validators.MinValueValidator(1)], verbose_name='порядок показа')),
+                (
+                    'order',
+                    models.PositiveSmallIntegerField(
+                        unique=True,
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name='порядок показа',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'часто задаваемый вопрос',
@@ -85,13 +195,27 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Quest',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=256, verbose_name='название квеста')),
                 ('description', models.TextField(blank=True, verbose_name='описание')),
                 ('registration_start_at', models.DateTimeField(verbose_name='начало регистрации')),
                 ('start_at', models.DateTimeField(verbose_name='начало квеста')),
                 ('end_at', models.DateTimeField(verbose_name='окончание квеста')),
-                ('stop_show_at', models.DateTimeField(blank=True, help_text='если заполнено, то перестанет отображаться в квестах после этой даты', null=True, verbose_name='прекратить показывать')),
+                (
+                    'stop_show_at',
+                    models.DateTimeField(
+                        blank=True,
+                        help_text='если заполнено, то перестанет отображаться в квестах после\
+                            этой даты',
+                        null=True,
+                        verbose_name='прекратить показывать',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'квест',
@@ -101,11 +225,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Contact',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
                 ('contact', models.TextField(unique=True, verbose_name='контакт')),
                 ('description', models.TextField(blank=True, verbose_name='описание')),
-                ('order', models.PositiveSmallIntegerField(unique=True, validators=[django.core.validators.MinValueValidator(1)], verbose_name='порядок показа')),
-                ('contact_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='contacts', to='quest_app.contacttype', verbose_name='тип контакта')),
+                (
+                    'order',
+                    models.PositiveSmallIntegerField(
+                        unique=True,
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name='порядок показа',
+                    ),
+                ),
+                (
+                    'contact_type',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='contacts',
+                        to='quest_app.contacttype',
+                        verbose_name='тип контакта',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'контакт',
@@ -115,13 +259,41 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID',
+                    ),
+                ),
                 ('name', models.CharField(max_length=128, verbose_name='название')),
-                ('short_description', models.TextField(blank=True, verbose_name='короткое описание')),
+                (
+                    'short_description',
+                    models.TextField(blank=True, verbose_name='короткое описание'),
+                ),
                 ('long_description', models.TextField(blank=True, verbose_name='длинное описание')),
-                ('participation_order', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='порядок показа категориии для регистрации')),
-                ('results_order', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(1)], verbose_name='порядок показа категории в таблице результатов')),
-                ('quest', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='categories', to='quest_app.quest', verbose_name='квест')),
+                (
+                    'participation_order',
+                    models.PositiveSmallIntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name='порядок показа категориии для регистрации',
+                    ),
+                ),
+                (
+                    'results_order',
+                    models.PositiveSmallIntegerField(
+                        validators=[django.core.validators.MinValueValidator(1)],
+                        verbose_name='порядок показа категории в таблице результатов',
+                    ),
+                ),
+                (
+                    'quest',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='categories',
+                        to='quest_app.quest',
+                        verbose_name='квест',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'категория квеста',

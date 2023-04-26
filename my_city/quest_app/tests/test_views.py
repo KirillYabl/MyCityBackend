@@ -6,7 +6,7 @@ from quest_app.choices import QuestStatus
 from quest_app.models import Quest
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestQuestAPI:
 
     def test_list_quest(self, quests):
@@ -17,9 +17,9 @@ class TestQuestAPI:
         display_statuses = {QuestStatus.coming, QuestStatus.active, QuestStatus.finished}
         assert len(data['results']) == len(quests) - now_show_quests
         assert data['count'] == len(quests) - now_show_quests
-        assert set(quest['status'] for quest in data['results']) == display_statuses
+        assert {quest['status'] for quest in data['results']} == display_statuses
 
-    def test_filter_quests_by_status(self, quests):
+    def test_filter_quests_by_status(self, quests):  # noqa: ARG002
         url = reverse('quest-list')
         response = APIClient().get(url, data={'status': QuestStatus.finished})
         data = response.json()
@@ -44,7 +44,7 @@ class TestQuestAPI:
         assert response.data['detail'].code == 'not_found'
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestQuestCategoryAPI:
 
     def test_list_category(self, quests):
@@ -55,8 +55,8 @@ class TestQuestCategoryAPI:
         assert response.status_code == 200
         data = response.json()
         assert len(data) == categories_count
-        assert set(name[0] for name in categories.values_list('name').distinct()) == set(
-            category['name'] for category in data)
+        assert {name[0] for name in categories.values_list('name').distinct()} == {
+            category['name'] for category in data}
 
     def test_nonexistent_quest_list_category(self):
         nonexistent_index = Quest.objects.count() + 1

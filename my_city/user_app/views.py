@@ -9,10 +9,11 @@ token_index = 1
 
 
 class RegistrationAPI(generics.GenericAPIView):
-    """"Регистрация команды."""
+    """ "Регистрация команды."""
+
     serializer_class = CreateUserSerializer
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> Response:  # noqa: ARG002
         """Регистрация команды.
 
         Состоит из трех этапов.
@@ -21,8 +22,8 @@ class RegistrationAPI(generics.GenericAPIView):
         Проверяется валидность почты и сложность пароля
 
         2) Создание команды для пользователя по имени
-        Проверяется имя команды, проверки не сложные, по длине и много пробелов между словами запрещено
-        а также в начеле и конце пробелы запрещены
+        Проверяется имя команды, проверки не сложные, по длине и много пробелов между словами
+        запрещено, а также в начеле и конце пробелы запрещены
 
         3) Создание участников команды с капитаном
         Проверяется по каждому участнику:
@@ -34,7 +35,8 @@ class RegistrationAPI(generics.GenericAPIView):
         Если будут ошибки в участниках, то они записываются примерно в таком виде, как передавались
         т.е. список из словарей, порядок тот же
 
-        И в конце вся информация проверяется вместе, найденные тут ошибки записываются в поле `members_general`
+        И в конце вся информация проверяется вместе,
+        найденные тут ошибки записываются в поле `members_general`
         - почта пользователя и капитана совпадают
         - количество участников от 2 до 5
         - нет пропусков в номерах участников
@@ -44,15 +46,17 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)[token_index]
-        })
+        return Response(
+            {
+                "user": UserSerializer(user, context=self.get_serializer_context()).data,
+                "token": AuthToken.objects.create(user)[token_index],
+            },
+        )
 
 
 class UserAPI(generics.RetrieveAPIView):
-    authentication_classes = [knox.auth.TokenAuthentication, ]
-    permission_classes = [permissions.IsAuthenticated, ]
+    authentication_classes = [knox.auth.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
 
     def get_object(self):

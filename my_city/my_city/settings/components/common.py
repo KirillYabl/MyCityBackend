@@ -1,10 +1,11 @@
+from corsheaders.defaults import default_headers
+
 from my_city.settings.components import BASE_DIR
 from my_city.settings.env import environ_env
-from corsheaders.defaults import default_headers
 
 SECRET_KEY = environ_env.str('DJANGO_SECRET_KEY')
 
-ALLOWED_HOSTS = environ_env.list('ALLOWED_HOSTS', ['127.0.0.1', '0.0.0.0'])
+ALLOWED_HOSTS = environ_env.list('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,8 +63,6 @@ MIN_MEMBERS_IN_TEAM = environ_env.int('MIN_MEMBERS_IN_TEAM', 2)
 MAX_MEMBERS_IN_TEAM = environ_env.int('MAX_MEMBERS_IN_TEAM', 5)
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_HEADERS = default_headers + (
-    'Access-Control-Allow-Origin',
-)
+CORS_ALLOW_HEADERS = (*default_headers, 'Access-Control-Allow-Origin')
 
 
