@@ -3,15 +3,15 @@
 from django.db import migrations
 
 
-def move_membership_to_participants(apps, schema_editor):
-    Team = apps.get_model('user_app', 'Team')
-    Member = apps.get_model('user_app', 'Member')
+def move_membership_to_participants(apps, _):
+    team_model = apps.get_model('user_app', 'Team')
+    member_model = apps.get_model('user_app', 'Member')
 
-    for team in Team.objects.all():
+    for team in team_model.objects.all():
         members = team.members.all()
         for member in members:
             member.member_number = member.memberships.first().member_number
-        Member.objects.bulk_update(members, ['member_number'])
+        member_model.objects.bulk_update(members, ['member_number'])
         members.update(_team=team)
 
 

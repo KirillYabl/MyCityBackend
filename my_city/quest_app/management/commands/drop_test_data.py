@@ -1,33 +1,28 @@
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
+from user_app.models import Member, Team, User
 
 from quest_app.models import (
-    ContactType,
-    Contact,
     FAQ,
-    Quest,
-    Category,
+    AnswerAttempt,
     AnswerType,
     Assignment,
-    AnswerAttempt,
-)
-from user_app.models import (
-    User,
-    Team,
-    Member,
+    Category,
+    Contact,
+    ContactType,
+    Quest,
 )
 
 
 class Command(BaseCommand):
-    help = 'Заполняет тестовую БД фейковыми данными'
+    """Заполняет тестовую БД фейковыми данными"""
 
     @atomic
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa: ARG002
         test_quest_ids = [quest.id for quest in Quest.objects.filter(name__contains='TEST')]
         test_answer_type_ids = {
             assignment.answer_type.id
-            for assignment
-            in Assignment.objects.filter(category__quest__id__in=test_quest_ids)
+            for assignment in Assignment.objects.filter(category__quest__id__in=test_quest_ids)
         }
         test_user_ids = [user.id for user in User.objects.filter(email__contains='TEST_')]
         AnswerAttempt.objects.filter(assignment__category__quest__id__in=test_quest_ids).delete()

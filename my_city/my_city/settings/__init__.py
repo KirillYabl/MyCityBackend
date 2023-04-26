@@ -7,8 +7,9 @@ PRODUCTION_ENV = 'production'
 
 ENV = environ_env.str('DJANGO_ENV')
 
+err_msg = 'DJANGO_ENV environment variable is not set'
 if ENV is None:
-    raise ValueError('DJANGO_ENV environment variable is not set"')
+    raise ValueError(err_msg)
 
 base_settings = [
     'components/common.py',
