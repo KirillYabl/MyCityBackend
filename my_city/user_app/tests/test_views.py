@@ -1,19 +1,21 @@
 import pytest
 from django.urls import reverse
-from rest_framework.test import APIClient
-from knox.models import AuthToken
 from knox.crypto import hash_token
+from knox.models import AuthToken
+from rest_framework.test import APIClient
 
-from user_app.models import User, Team, Member
+from user_app.models import Member, Team, User
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestRegistrationAPI:
     def test_success(self, success_registration_data):
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
-        response = APIClient().post(reverse('registration'), data=success_registration_data, format='json')
+        response = APIClient().post(
+            reverse('registration'), data=success_registration_data, format='json',
+        )
         assert response.status_code == 200
         assert User.objects.count() == users_cnt + 1
         assert Team.objects.count() == teams_cnt + 1
@@ -31,7 +33,11 @@ class TestRegistrationAPI:
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
-        response = APIClient().post(reverse('registration'), data=error_registration_norequirement_data, format='json')
+        response = APIClient().post(
+            reverse('registration'),
+            data=error_registration_norequirement_data,
+            format='json',
+        )
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
         assert Team.objects.count() == teams_cnt
@@ -49,7 +55,11 @@ class TestRegistrationAPI:
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
-        response = APIClient().post(reverse('registration'), data=error_registration_wrong_first_data, format='json')
+        response = APIClient().post(
+            reverse('registration'),
+            data=error_registration_wrong_first_data,
+            format='json',
+        )
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
         assert Team.objects.count() == teams_cnt
@@ -73,7 +83,9 @@ class TestRegistrationAPI:
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
-        response = APIClient().post(reverse('registration'), data=error_registration_wrong_second_data, format='json')
+        response = APIClient().post(
+            reverse('registration'), data=error_registration_wrong_second_data, format='json',
+        )
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
         assert Team.objects.count() == teams_cnt
@@ -88,14 +100,16 @@ class TestRegistrationAPI:
         assert 'full_name' in data['members'][2]
         assert 'full_name' in data['members'][3]
 
-    def test_members_general_other_invalid_data(self, error_registration_wrong_members_general_other_data):
+    def test_members_general_other_invalid_data(
+        self, error_registration_wrong_members_general_other_data,
+    ):
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
         response = APIClient().post(
             reverse('registration'),
             data=error_registration_wrong_members_general_other_data,
-            format='json'
+            format='json',
         )
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
@@ -104,18 +118,30 @@ class TestRegistrationAPI:
         data = response.json()
         assert 'email для регистрации и у капитана должны совпадать' in data['members_general']
         assert 'Число участников должно быть от 2 до 5' in data['members_general']
-        assert 'Между номерами участников не должно быть пропусков и повторов (от 1 до 6)' in data['members_general']
-        assert 'У всех участников, у которых задан email, они должны быть разными' in data['members_general']
-        assert 'У всех участников, у которых задан телефон, они должны быть разными' in data['members_general']
+        assert (
+            'Между номерами участников не должно быть пропусков и повторов (от 1 до 6)'
+            in data['members_general']
+        )
+        assert (
+            'У всех участников, у которых задан email, они должны быть разными'
+            in data['members_general']
+        )
+        assert (
+            'У всех участников, у которых задан телефон, они должны быть разными'
+            in data['members_general']
+        )
 
-    def test_members_general_captain_invalid_data(self, error_registration_wrong_members_general_captain_data):
+    def test_members_general_captain_invalid_data(
+        self,
+        error_registration_wrong_members_general_captain_data,
+    ):
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
         response = APIClient().post(
             reverse('registration'),
             data=error_registration_wrong_members_general_captain_data,
-            format='json'
+            format='json',
         )
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
@@ -128,7 +154,9 @@ class TestRegistrationAPI:
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
-        response = APIClient().post(reverse('registration'), data=success_registration_data, format='json')
+        response = APIClient().post(
+            reverse('registration'), data=success_registration_data, format='json',
+        )
         assert response.status_code == 200
         users_cnt += 1
         teams_cnt += 1
@@ -144,7 +172,9 @@ class TestRegistrationAPI:
         assert data['user']['email'] == success_registration_data['email']
         assert 'token' in data
         AuthToken.objects.get(user=new_user, digest=hash_token(data['token']))
-        response = APIClient().post(reverse('registration'), data=success_registration_data, format='json')
+        response = APIClient().post(
+            reverse('registration'), data=success_registration_data, format='json',
+        )
         data = response.json()
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
@@ -157,7 +187,9 @@ class TestRegistrationAPI:
         users_cnt = User.objects.count()
         teams_cnt = Team.objects.count()
         members_cnt = Member.objects.count()
-        response = APIClient().post(reverse('registration'), data=error_registration_invalid_full_name, format='json')
+        response = APIClient().post(
+            reverse('registration'), data=error_registration_invalid_full_name, format='json',
+        )
         assert response.status_code == 400
         assert User.objects.count() == users_cnt
         assert Team.objects.count() == teams_cnt
@@ -167,12 +199,14 @@ class TestRegistrationAPI:
         assert 'full_name' in data['members'][1]
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestUserAPI:
     """The main tests purpose is check auth by token because it's only api in app"""
 
     def test_success(self, success_registration_data):
-        response = APIClient().post(reverse('registration'), data=success_registration_data, format='json')
+        response = APIClient().post(
+            reverse('registration'), data=success_registration_data, format='json',
+        )
         assert response.status_code == 200
         token = response.json()['token']
 
@@ -182,14 +216,14 @@ class TestUserAPI:
         assert response.status_code == 200
 
     def test_wrong_token(self):
-        token = 'asasfadsfsd23423nj3nj3&%jhGJH7y'
+        token = 'asasfadsfsd23423nj3nj3&%jhGJH7y'  # noqa: S105
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
         response = client.get(reverse('users'))
         assert response.status_code == 401
-        assert 'Invalid token.' == response.json()['detail']
+        assert response.json()['detail'] == 'Invalid token.'
 
     def test_no_token(self):
         response = APIClient().get(reverse('users'))
         assert response.status_code == 401
-        assert 'Authentication credentials were not provided.' == response.json()['detail']
+        assert response.json()['detail'] == 'Authentication credentials were not provided.'
