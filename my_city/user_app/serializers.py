@@ -1,16 +1,15 @@
 import collections
 from collections import defaultdict
 
-from django.contrib.auth import password_validation, get_user_model
 from django.conf import settings
+from django.contrib.auth import get_user_model, password_validation
 from django.core import exceptions
 from django.db.transaction import atomic
+from quest_app.serializers import QuestCategoriesSerializer
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
-from .models import Team, Member
-from quest_app.models import Quest
-from quest_app.serializers import QuestCategoriesSerializer
+from .models import Member, Team
 
 User = get_user_model()
 
@@ -20,19 +19,10 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email')
 
-
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = (
-            'id',
-            'full_name',
-            'birth_date',
-            'phone',
-            'email',
-            'is_captain',
-            'member_number'
-        )
+        fields = ('id', 'full_name', 'birth_date', 'phone', 'email', 'is_captain', 'member_number')
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -41,7 +31,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ('id', 'name', 'members', 'quests',)
+        fields = ('id', 'name', 'members', 'quests')
 
     def get_quests(self, team):
         """
@@ -50,34 +40,39 @@ class TeamSerializer(serializers.ModelSerializer):
         Но при этом категории у квеста оставить только те, в которых участвует команда
 
         Причина использования этого метода, вместо обычных вложенных сериализаторов следующая
-        1. Для фронтенда и для заказчика понятие квеста более первичное, чем категории, потому что пользователь
-        регистрируется на квест. Но со стороны архитектуры БД было правильнее сделать связь команды с квестом не
-        напрямую, а через категорию
+        1. Для фронтенда и для заказчика понятие квеста более первичное, чем категории,
+        потому что пользователь регистрируется на квест. Но со стороны архитектуры БД было
+        правильнее сделать связь команды с квестом не напрямую, а через категорию
         2. Соответственно фронтенду удобнее получать в привязке к команде квесты, а не категории
-        3. И еще у квеста есть кверисет с особыми методами, которые в других кверисетах соответственно
-        не получится использовать
+        3. И еще у квеста есть кверисет с особыми методами, которые в других кверисетах
+        соответственно не получится использовать
 
-        этот метод для листа в худшем случае производит N*2 лищних запросов, где N количество записей
-        но вообще апи юзеров с листом не должно часто вызываться
+        этот метод для листа в худшем случае производит N*2 лищних запросов, где N количество
+        записей но вообще апи юзеров с листом не должно часто вызываться
         первый лишний запрос при вызове сериалайзера внутри, сериалайзер по id ищет квест там
         второй лишний запрос при отборе категорий вручную, его в теории можно как-то
         сократить, но пока не понял как
         """
 
         # если сериализатор создается, то команда это не объект БД, а словарь и соответственно
-        # еще нигде не участвует. И тогда нужно вернуть пустой список (почему она вообще вызывается при записи,
-        # хотя установленно, что поле только для чтения я не разобрался, видимо баг в джанге)
+        # еще нигде не участвует. И тогда нужно вернуть пустой список (почему она вообще вызывается
+        # при записи, хотя установленно, что поле только для чтения я не разобрался,
+        # видимо баг в джанге)
         if type(team) == collections.OrderedDict:
             return []
 
         team_categories = team.categories.all()
-        quests = set(category.quest for category in team_categories if category.quest.is_show())
+        quests = {category.quest for category in team_categories if category.quest.is_show()}
         serialized_quests = QuestCategoriesSerializer(instance=quests, many=True).data
         team_categories_ids = team.categories.values_list('id', flat=True)
 
         # оставим только те категории, в которых участвует команда, с помощью ORM это не сделать :(
         for quest_index, quest in enumerate(serialized_quests):
-            quest_categories = [category for category in quest['categories'] if category['id'] in team_categories_ids]
+            quest_categories = [
+                category
+                for category in quest['categories']
+                if category['id'] in team_categories_ids
+            ]
             serialized_quests[quest_index]['categories'] = quest_categories
 
         return serialized_quests
@@ -104,7 +99,7 @@ class TeamSerializer(serializers.ModelSerializer):
             if check_email_phone and not member_has_phone:
                 member_errors['phone'].append('У данного члена команды должен быть указан телефон')
             if check_email_phone and not member_has_email:
-                member_errors['email'].append(f'У данного члена команды должен быть указан email')
+                member_errors['email'].append('У данного члена команды должен быть указан email')
 
             # проверим, что имя с датой рождения не повторяются
             # имена еще возможны (вдруг отца и сына одинаково зовут)
@@ -115,7 +110,7 @@ class TeamSerializer(serializers.ModelSerializer):
             else:
                 name, birthdate = member_name_birthdate
                 member_errors['full_name'].append(
-                    f'{name} ({birthdate}) уже есть в команде под другим номером'
+                    f'{name} ({birthdate}) уже есть в команде под другим номером',
                 )
 
             error_messages[member_index] = member_errors
@@ -131,24 +126,19 @@ class ComplexUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'password', 'team',)
+        fields = ('id', 'email', 'password', 'team')
         extra_kwargs = {
             'password': {'write_only': True},
         }
 
     @atomic
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['email'],
-                                        validated_data['password'])
+        user = User.objects.create_user(validated_data['email'], validated_data['password'])
         team_data = validated_data.pop('team')
         members_data = team_data.pop('members')
 
         team = Team.objects.create(captain=user, **team_data)
-        members = [
-            Member(team=team, **member_data)
-            for member_data
-            in members_data
-        ]
+        members = [Member(team=team, **member_data) for member_data in members_data]
         Member.objects.bulk_create(members)
         return user
 
@@ -165,17 +155,21 @@ class ComplexUserSerializer(serializers.ModelSerializer):
             error_messages.append(
                 exceptions.ValidationError(
                     'email для регистрации и у капитана должны совпадать',
-                    code='wrong_captain_email'
+                    code='wrong_captain_email',
                 ),
             )
 
         # это проверки про members, но они здесь, потому что они не относятся к какому-то
         # конкретному участнику команды и должны иметь свой лейбл
-        if len(members) < settings.MIN_MEMBERS_IN_TEAM or len(members) > settings.MAX_MEMBERS_IN_TEAM:
+        if len(members) < settings.MIN_MEMBERS_IN_TEAM or \
+            len(members) > settings.MAX_MEMBERS_IN_TEAM:
             error_messages.append(
                 exceptions.ValidationError(
-                    f'Число участников должно быть от {settings.MIN_MEMBERS_IN_TEAM} до {settings.MAX_MEMBERS_IN_TEAM}',
-                    code='wrong_members_count'
+                    (
+                        'Число участников должно быть от '
+                        f'{settings.MIN_MEMBERS_IN_TEAM} до {settings.MAX_MEMBERS_IN_TEAM}'
+                    ),
+                    code='wrong_members_count',
                 ),
             )
 
@@ -183,8 +177,11 @@ class ComplexUserSerializer(serializers.ModelSerializer):
         if set(member_numbers) != set(range(1, len(members) + 1)):
             error_messages.append(
                 exceptions.ValidationError(
-                    f'Между номерами участников не должно быть пропусков и повторов (от 1 до {len(members)})',
-                    code='member_number_duplicate'
+                    (
+                        'Между номерами участников не должно быть пропусков и повторов '
+                        f'(от 1 до {len(members)})'
+                    ),
+                    code='member_number_duplicate',
                 ),
             )
 
@@ -195,7 +192,7 @@ class ComplexUserSerializer(serializers.ModelSerializer):
             error_messages.append(
                 exceptions.ValidationError(
                     'У всех участников, у которых задан email, они должны быть разными',
-                    code='email_duplicate'
+                    code='email_duplicate',
                 ),
             )
 
@@ -203,12 +200,14 @@ class ComplexUserSerializer(serializers.ModelSerializer):
             error_messages.append(
                 exceptions.ValidationError(
                     'У всех участников, у которых задан телефон, они должны быть разными',
-                    code='phone_duplicate'
+                    code='phone_duplicate',
                 ),
             )
 
         if error_messages:
-            raise exceptions.ValidationError({'members_general': error_messages}, code='members_general')
+            raise exceptions.ValidationError(
+                {'members_general': error_messages}, code='members_general',
+            )
 
         return attrs
 
@@ -217,6 +216,6 @@ class ComplexUserSerializer(serializers.ModelSerializer):
         try:
             password_validation.validate_password(password=password)
         except exceptions.ValidationError as e:
-            raise serializers.ValidationError(list(e.messages), code='invalid_password')
+            raise serializers.ValidationError(list(e.messages), code='invalid_password') from e
 
         return password

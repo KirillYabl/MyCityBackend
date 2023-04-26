@@ -1,11 +1,15 @@
 import pytest
 
-from quest_app.models import Quest, Category
-from user_app.models import User, Member, Team
-from user_app.serializers import UserSerializer, TeamSerializer, MemberSerializer, ComplexUserSerializer
+from user_app.models import Member, Team, User
+from user_app.serializers import (
+    ComplexUserSerializer,
+    MemberSerializer,
+    TeamSerializer,
+    UserSerializer,
+)
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestUserSerializer:
     def test_user_serializer(self):
         email = 'test@mail.ru'
@@ -16,7 +20,7 @@ class TestUserSerializer:
         assert data['email'] == email
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestTeamSerializer:
     def test_team_serializer(self, quests):
         team_name = 'team1'
@@ -45,7 +49,7 @@ class TestTeamSerializer:
         assert data['quests'][0]['categories'][0]['id'] == category.id
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestMemberSerializer:
     def test_member_serializer(self):
         user = User.objects.create_user('test@mail.ru', 'sd#f35DGD3!d$%')
@@ -76,7 +80,7 @@ class TestMemberSerializer:
         assert data['member_number'] == member_number
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestComplexUserSerializer:
     def test_complex_user_serializer(self):
         data = {
@@ -91,7 +95,7 @@ class TestComplexUserSerializer:
                         "phone": "+79003457896",
                         "email": "vasya@mail.ru",
                         "is_captain": True,
-                        "member_number": 1
+                        "member_number": 1,
                     },
                     {
                         "full_name": "Иван Григорьевич",
@@ -99,9 +103,9 @@ class TestComplexUserSerializer:
                         "phone": "+79003452896",
                         "email": "vasaya@mail.ru",
                         "is_captain": False,
-                        "member_number": 2
-                    }
-                ]
+                        "member_number": 2,
+                    },
+                ],
             },
         }
 

@@ -1,13 +1,13 @@
-import os.path
+import os
 
 import pytest
-from django.utils import timezone
 from django.conf import settings
+from django.utils import timezone
 
-from quest_app.models import Quest, Category
+from quest_app.models import Category, Quest
 
 
-@pytest.fixture
+@pytest.fixture()
 def quests():
     now = timezone.now()
     coming_quest = Quest.objects.create(
@@ -74,7 +74,7 @@ def quests():
                 long_description=f'Test long description {i}' * 100,
                 participation_order=i + 1,
                 results_order=5 - i,
-            )
+            ),
         )
     for i in range(settings.REST_FRAMEWORK['PAGE_SIZE'] + 1):
         categories.append(
@@ -85,7 +85,14 @@ def quests():
                 long_description=f'Test long description {i}' * 100,
                 participation_order=i + 1,
                 results_order=i + 1,
-            )
+            ),
         )
     Category.objects.bulk_create(categories)
-    return [coming_quest, active_quest, finished_quest, not_showing_quest, expired_quest, finished_stop_none_quest]
+    return [
+        coming_quest,
+        active_quest,
+        finished_quest,
+        not_showing_quest,
+        expired_quest,
+        finished_stop_none_quest,
+    ]

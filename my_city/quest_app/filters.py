@@ -9,4 +9,4 @@ class QuestFilter(filters.FilterSet):
 
     class Meta:
         model = Quest
-        fields = ['status', ]
+        fields = ['status']
