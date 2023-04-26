@@ -23,7 +23,7 @@ drop_test_db:
 	docker compose run --rm api sh -c './manage.py drop_test_data'
 
 tests:
-	docker compose exec api pytest
+	docker compose run --rm api sh -c 'pytest .'
 
 lint:
 	ruff check ./my_city
