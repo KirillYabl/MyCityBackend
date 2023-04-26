@@ -25,4 +25,10 @@ drop_test_db:
 tests:
 	docker compose exec api pytest
 
+lint:
+	ruff check ./my_city
+
+isort:
+	ruff --select I ./my_city --fix
+
 .PHONY: venv tests
