@@ -48,4 +48,4 @@ class FAQAPI(viewsets.ReadOnlyModelViewSet):
     serializer_class = FAQSerializer
 
     def get_queryset(self):
-        return FAQ.objects.all()
+        return FAQ.objects.get(question=self.kwargs['question'])

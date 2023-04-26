@@ -1,6 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
-
+from corsheaders.defaults import default_headers
 import dj_database_url
 from environs import Env
 
@@ -161,27 +161,11 @@ DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'dbbackups'}
 
 #CORS settings
-CORS_ALLOW_METHODS = (
-        'GET',
-        'POST',
-        'PUT',
-        'PATCH',
-        'DELETE',
-        'OPTIONS'
-    )
-
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
-
 CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', True)
-CORS_ALLOW_CREDENTIALS = env.bool('CORS_ALLOW_CREDENTIALS', True)
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', ["http://localhost:3080", "http://127.0.0.1:8000 "])
+CORS_ALLOW_HEADERS = default_headers + (
+    'Access-Control-Allow-Origin',
+)
+
+
+
+

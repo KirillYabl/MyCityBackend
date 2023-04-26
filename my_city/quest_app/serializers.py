@@ -41,5 +41,4 @@ class FAQSerializer(serializers.ModelSerializer):
         fields = (
             'question',
             'answer',
-            'order',
         )
