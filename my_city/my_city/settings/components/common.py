@@ -3,7 +3,7 @@ from my_city.settings.env import environ_env
 
 SECRET_KEY = environ_env.str('DJANGO_SECRET_KEY')
 
-ALLOWED_HOSTS = environ_env.list('ALLOWED_HOSTS', ['127.0.0.1', '0.0.0.0'])
+ALLOWED_HOSTS = environ_env.list('ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'django.contrib.admin',

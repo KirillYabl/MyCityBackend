@@ -2,13 +2,11 @@ import copy
 
 import pytest
 
-from user_app.models import User, Team, Member
-
 SUCCESS_DATA = {
     "email": "vasya@mail.ru",
     "password": "asd@$124Dsfd2",
     "team": {
-        "name": "teamsdfkjskjsgb"
+        "name": "teamsdfkjskjsgb",
     },
     "members": [
         {
@@ -17,7 +15,7 @@ SUCCESS_DATA = {
             "phone": "+79003457896",
             "email": "vasya@mail.ru",
             "is_captain": True,
-            "member_number": 1
+            "member_number": 1,
         },
         {
             "full_name": "Иван Григорьевич",
@@ -25,36 +23,36 @@ SUCCESS_DATA = {
             "phone": "+79003452896",
             "email": "vasaya@mail.ru",
             "is_captain": False,
-            "member_number": 2
-        }
-    ]
+            "member_number": 2,
+        },
+    ],
 }
 
 EMPTY_DATA = {
     "email": "",
     "password": "",
     "team": {
-        "name": ""
+        "name": "",
     },
-    "members": [{}]
+    "members": [{}],
 }
 
 
-@pytest.fixture
+@pytest.fixture()
 def success_registration_data():
     return SUCCESS_DATA
 
 
-@pytest.fixture
+@pytest.fixture()
 def error_registration_norequirement_data():
     return EMPTY_DATA
 
 
-@pytest.fixture
+@pytest.fixture()
 def error_registration_wrong_first_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['email'] = "vasyaru"
-    wrong_data['password'] = "vasya"
+    wrong_data['password'] = "vasya"  # noqa: S105
     wrong_data['team'] = {"name": "teamsd   fkjskjsgb"}
     wrong_data['members'] = [
         {
@@ -63,7 +61,7 @@ def error_registration_wrong_first_data():
             "phone": "89003457896",
             "email": "vasya@mail.ru",
             "is_captain": "s",
-            "member_number": 10
+            "member_number": 10,
         },
         {
             "full_name": "Иван Григорьевич Иван Григорьевич Иван Григорьевич",
@@ -71,13 +69,13 @@ def error_registration_wrong_first_data():
             "phone": "+790034528",
             "email": "vasayaru",
             "is_captain": False,
-            "member_number": "asd"
-        }
+            "member_number": "asd",
+        },
     ]
     return wrong_data
 
 
-@pytest.fixture
+@pytest.fixture()
 def error_registration_wrong_second_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['members'] = [
@@ -87,7 +85,7 @@ def error_registration_wrong_second_data():
             "phone": "",
             "email": "asdvasya@mail.ru",
             "is_captain": False,
-            "member_number": 1
+            "member_number": 1,
         },
         {
             "full_name": "Иван Григорьевич",
@@ -95,7 +93,7 @@ def error_registration_wrong_second_data():
             "phone": "",
             "email": "",
             "is_captain": False,
-            "member_number": 2
+            "member_number": 2,
         },
         {
             "full_name": "Иван Григорьевич",
@@ -103,7 +101,7 @@ def error_registration_wrong_second_data():
             "phone": "+79003452896",
             "email": "vasaya@mail.ru",
             "is_captain": True,
-            "member_number": 4
+            "member_number": 4,
         },
         {
             "full_name": "Иван Григорьевич",
@@ -111,13 +109,13 @@ def error_registration_wrong_second_data():
             "phone": "+79003452896",
             "email": "vasaya@mail.ru",
             "is_captain": False,
-            "member_number": 5
-        }
+            "member_number": 5,
+        },
     ]
     return wrong_data
 
 
-@pytest.fixture
+@pytest.fixture()
 def error_registration_wrong_members_general_other_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['members'] = [
@@ -127,7 +125,7 @@ def error_registration_wrong_members_general_other_data():
             "phone": "+79003457896",
             "email": "ivasya@mail.ru",
             "is_captain": True,
-            "member_number": 1
+            "member_number": 1,
         },
         {
             "full_name": "Василий Петрович",
@@ -135,7 +133,7 @@ def error_registration_wrong_members_general_other_data():
             "phone": "+79003457896",
             "email": "ivasya@mail.ru",
             "is_captain": False,
-            "member_number": 2
+            "member_number": 2,
         },
         {
             "full_name": "Василий Петрович",
@@ -143,7 +141,7 @@ def error_registration_wrong_members_general_other_data():
             "phone": "+79003457896",
             "email": "ivasya@mail.ru",
             "is_captain": False,
-            "member_number": 3
+            "member_number": 3,
         },
         {
             "full_name": "Василий Петрович",
@@ -151,7 +149,7 @@ def error_registration_wrong_members_general_other_data():
             "phone": "+79003457896",
             "email": "ivasya@mail.ru",
             "is_captain": False,
-            "member_number": 5
+            "member_number": 5,
         },
         {
             "full_name": "Василий Петрович",
@@ -159,7 +157,7 @@ def error_registration_wrong_members_general_other_data():
             "phone": "+79003457896",
             "email": "ivasya@mail.ru",
             "is_captain": False,
-            "member_number": 5
+            "member_number": 5,
         },
         {
             "full_name": "Василий Петрович",
@@ -167,13 +165,13 @@ def error_registration_wrong_members_general_other_data():
             "phone": "+79003457896",
             "email": "ivasya@mail.ru",
             "is_captain": False,
-            "member_number": 5
-        }
+            "member_number": 5,
+        },
     ]
     return wrong_data
 
 
-@pytest.fixture
+@pytest.fixture()
 def error_registration_wrong_members_general_captain_data():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['members'] = [
@@ -183,13 +181,13 @@ def error_registration_wrong_members_general_captain_data():
             "phone": "+79003457896",
             "email": "vasya@mail.ru",
             "is_captain": True,
-            "member_number": 1
-        }
+            "member_number": 1,
+        },
     ]
     return wrong_data
 
 
-@pytest.fixture
+@pytest.fixture()
 def error_registration_invalid_full_name():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['members'][1]['full_name'] = 'Иван Григорьевичasd'

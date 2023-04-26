@@ -1,4 +1,4 @@
-from my_city.settings.components.common import MIDDLEWARE, INSTALLED_APPS
+from my_city.settings.components.common import INSTALLED_APPS, MIDDLEWARE
 
 DEBUG = True
 

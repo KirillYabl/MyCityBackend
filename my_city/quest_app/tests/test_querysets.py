@@ -1,12 +1,12 @@
 import pytest
 
-from quest_app.models import Quest
 from quest_app.choices import QuestStatus
+from quest_app.models import Quest
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestQuestQueryset:
-    def test_quest_queryset_which_show(self, quests):
+    def test_quest_queryset_which_show(self, quests):  # noqa: ARG002
         assert Quest.objects.which_show().count() == 4
 
     def test_quest_queryset_with_status(self, quests):
