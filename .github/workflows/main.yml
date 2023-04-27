@@ -14,6 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run tests
-        run: make tests
+        run: make tests-ci
       - name: Run linter
-        run: make lint
+        run: make lint-ci
+      - name: Coveralls
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel: true
+
+  coveralls_finish:
+    needs: build
+    runs-on: ubuntu-latest
+    container: python:3-slim
+    steps:
+      - name: Coveralls Finished
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel-finished: true
