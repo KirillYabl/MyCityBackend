@@ -21,17 +21,3 @@ jobs:
         run: docker compose --file docker-compose.ci.yaml run -e COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }}  --rm api sh -c 'coveralls --service=github'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  coveralls:
-    name: Indicate completion to coveralls.io
-    needs: build
-    runs-on: ubuntu-latest
-    container: python:3-slim
-    steps:
-      - name: Coveralls Finished
-        run: |
-          pip3 install --upgrade coveralls
-          coveralls --service=github --finish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
