@@ -4,7 +4,7 @@ from rest_framework import permissions, viewsets
 
 from .filters import QuestFilter
 from .models import Quest, Category
-from .serializers import QuestSerializer, CategorySerializer, FAQSerializer
+from .serializers import QuestSerializer, CategorySerializer
 
 
 @method_decorator(name='list', decorator=swagger_auto_schema(
