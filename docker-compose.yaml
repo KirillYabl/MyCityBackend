@@ -16,11 +16,11 @@ services:
       args:
         requirements_file: dev-requirements.txt
     volumes:
-      - ./my_city/:/usr/src/app/
+      - .:/usr/src/app/
     ports:
       - 8000:8000
     depends_on:
       - db
     env_file:
       - ./my_city/my_city/.env
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python my_city/manage.py runserver 0.0.0.0:8000
