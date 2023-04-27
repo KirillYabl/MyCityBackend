@@ -38,8 +38,6 @@ isort:
 	ruff --select I ./my_city --fix
 
 coverage:
-	$(MAKE) up
-	docker compose run --rm api sh -c 'coverage run --source=my_city -m pytest my_city'
-	$(MAKE) down
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'coverage run --source=my_city -m pytest my_city'
 
 .PHONY: venv tests
