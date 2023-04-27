@@ -20,10 +20,9 @@ jobs:
       - name: Run coveralls
         run: make coverage
       - name: Coveralls
-        run: make coveralls-ci
+        run: docker compose --file docker-compose.ci.yaml run -e COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }}  --rm api sh -c 'coveralls --service=github'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
   coveralls:
     name: Indicate completion to coveralls.io
