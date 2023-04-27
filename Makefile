@@ -40,4 +40,7 @@ isort:
 coverage:
 	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'coverage run --source=my_city -m pytest my_city'
 
+coveralls-ci:
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'coveralls --service=github'
+
 .PHONY: venv tests
