@@ -37,10 +37,10 @@ lint:
 isort:
 	ruff --select I ./my_city --fix
 
-coverage:
+coverage-ci:
 	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'coverage run --source=my_city -m pytest my_city'
 
-coveralls-ci:
-	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'coveralls --service=github'
+coveralls:
+	docker compose run --rm api sh -c 'coveralls'
 
-.PHONY: venv tests
+.PHONY: venv tests coveralls
