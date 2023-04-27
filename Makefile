@@ -37,4 +37,9 @@ lint:
 isort:
 	ruff --select I ./my_city --fix
 
+coverage:
+	$(MAKE) up
+	docker compose run --rm api sh -c 'coverage run --source=my_city -m pytest my_city'
+	$(MAKE) down
+
 .PHONY: venv tests
