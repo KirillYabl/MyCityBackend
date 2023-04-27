@@ -1,5 +1,6 @@
 from my_city.settings.components import BASE_DIR
 from my_city.settings.env import environ_env
+from corsheaders.defaults import default_headers
 
 SECRET_KEY = environ_env.str('DJANGO_SECRET_KEY')
 
@@ -20,11 +21,13 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'knox',
     'dbbackup',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,3 +60,10 @@ INTERNAL_IPS = [
 
 MIN_MEMBERS_IN_TEAM = environ_env.int('MIN_MEMBERS_IN_TEAM', 2)
 MAX_MEMBERS_IN_TEAM = environ_env.int('MAX_MEMBERS_IN_TEAM', 5)
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = default_headers + (
+    'Access-Control-Allow-Origin',
+)
+
+
