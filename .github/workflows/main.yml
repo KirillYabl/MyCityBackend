@@ -20,7 +20,7 @@ jobs:
       - name: Run coveralls
         run: make coverage
       - name: Coveralls
-        run: coveralls --service=github
+        run: make coveralls-ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
