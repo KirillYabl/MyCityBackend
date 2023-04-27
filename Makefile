@@ -1,0 +1,28 @@
+venv:
+	test -d venv || python3.9 -m venv venv
+
+install-dev:
+	. venv/bin/activate && pip install -r dev-requirements.txt
+
+build:
+	docker compose build
+
+up:
+	docker compose up -d
+
+down:
+	docker compose down
+
+migrate:
+	docker compose run --rm api sh -c './manage.py migrate'
+
+fill_db:
+	docker compose run --rm api sh -c './manage.py fill_test_data'
+
+drop_test_db:
+	docker compose run --rm api sh -c './manage.py drop_test_data'
+
+tests:
+	docker compose exec api pytest
+
+.PHONY: venv tests
