@@ -25,6 +25,12 @@ drop_test_db:
 tests:
 	docker compose run --rm api sh -c 'pytest .'
 
+tests-ci:
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'pytest ./my_city'
+
+lint-ci:
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'ruff check ./my_city'
+
 lint:
 	ruff check ./my_city
 
