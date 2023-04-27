@@ -135,6 +135,7 @@ make drop_test_db # очистка
 Запустить тесты:
 ```shell
 make tests
+
 ```
 
 Запустить линтер:
