@@ -11,7 +11,10 @@ services:
     restart: unless-stopped
 
   api:
-    build: .
+    build:
+      context: .
+      args:
+        requirements_file: dev-requirements.txt
     volumes:
       - ./my_city/:/usr/src/app/
     ports:
