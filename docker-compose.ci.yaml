@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:14.6-alpine
+    environment:
+      POSTGRES_NAME: DB_NAME
+      POSTGRES_PASSWORD: DB_PASSWORD
+      POSTGRES_USER: USER_NAME
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    volumes:
+      - ./pgdata/:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+  api:
+    build:
+      context: .
+      args:
+        requirements_file: ci-requirements.txt
+    environment:
+      DJANGO_SECRET_KEY: REPLACE_ME
+      POSTGRES_DB_URL: "postgres://USER_NAME:DB_PASSWORD@db:5432/DB_NAME"
+      PGDATA: /var/lib/postgresql/data/pgdata
+      MIN_MEMBERS_IN_TEAM: 2
+      MAX_MEMBERS_IN_TEAM: 5
+      DJANGO_SETTINGS_MODULE: my_city.settings
+      DJANGO_ENV: ci
+      ALLOWED_HOSTS: '127.0.0.1,0.0.0.0'
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+    command: python my_city/manage.py runserver 0.0.0.0:8000
