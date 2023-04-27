@@ -1,13 +1,15 @@
 FROM python:3.9.16-slim-buster
 
+ARG requirements_file
+
 WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip
-COPY ./dev-requirements.txt .
-RUN pip install -r dev-requirements.txt
+COPY ./$requirements_file .
+RUN pip install -r $requirements_file
 
 COPY . .
 
