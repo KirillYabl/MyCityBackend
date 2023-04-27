@@ -18,3 +18,4 @@ django-cleanup==7.0.*
 django-rest-knox==4.2.*
 django-split-settings==1.2.0
 pytest-django==4.5.2
+django-cors-headers
