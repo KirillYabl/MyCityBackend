@@ -55,6 +55,11 @@ class RegistrationAPI(generics.GenericAPIView):
 
 class UserAPI(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [knox.auth.TokenAuthentication, ]
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.AllowAny, ]
     serializer_class = ComplexUserSerializer
-    queryset = User.objects.prefetch_related('team', 'team__members')
+    queryset = User.objects.prefetch_related(
+        'team',
+        'team__members',
+        'team__categories',
+        'team__categories__quest'
+    )

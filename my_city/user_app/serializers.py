@@ -1,3 +1,4 @@
+import collections
 from collections import defaultdict
 
 from django.contrib.auth import password_validation, get_user_model
@@ -5,8 +6,11 @@ from django.conf import settings
 from django.core import exceptions
 from django.db.transaction import atomic
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from .models import Team, Member
+from quest_app.models import Quest
+from quest_app.serializers import QuestCategoriesSerializer
 
 User = get_user_model()
 
@@ -33,10 +37,50 @@ class MemberSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     members = MemberSerializer(many=True)
+    quests = SerializerMethodField('get_quests', read_only=True)
 
     class Meta:
         model = Team
-        fields = ('id', 'name', 'members',)
+        fields = ('id', 'name', 'members', 'quests',)
+
+    def get_quests(self, team):
+        """
+        Достать список квестов для команды.
+
+        Но при этом категории у квеста оставить только те, в которых участвует команда
+
+        Причина использования этого метода, вместо обычных вложенных сериализаторов следующая
+        1. Для фронтенда и для заказчика понятие квеста более первичное, чем категории, потому что пользователь
+        регистрируется на квест. Но со стороны архитектуры БД было правильнее сделать связь команды с квестом не
+        напрямую, а через категорию
+        2. Соответственно фронтенду удобнее получать в привязке к команде квесты, а не категории
+        3. И еще у квеста есть кверисет с особыми методами, которые в других кверисетах соответственно
+        не получится использовать
+
+        этот метод для листа в худшем случае производит N*2 лищних запросов, где N количество записей
+        но вообще апи юзеров с листом не должно часто вызываться
+        первый лишний запрос при вызове сериалайзера внутри, сериалайзер по id ищет квест там
+        второй лишний запрос при отборе категорий вручную, его в теории можно как-то
+        сократить, но пока не понял как
+        """
+
+        # если сериализатор создается, то команда это не объект БД, а словарь и соответственно
+        # еще нигде не участвует. И тогда нужно вернуть пустой список (почему она вообще вызывается при записи,
+        # хотя установленно, что поле только для чтения я не разобрался, видимо баг в джанге)
+        if type(team) == collections.OrderedDict:
+            return []
+
+        team_categories = team.categories.all()
+        quests = set(category.quest for category in team_categories if category.quest.is_show())
+        serialized_quests = QuestCategoriesSerializer(instance=quests, many=True).data
+        team_categories_ids = team.categories.values_list('id', flat=True)
+
+        # оставим только те категории, в которых участвует команда, с помощью ORM это не сделать :(
+        for quest_index, quest in enumerate(serialized_quests):
+            quest_categories = [category for category in quest['categories'] if category['id'] in team_categories_ids]
+            serialized_quests[quest_index]['categories'] = quest_categories
+
+        return serialized_quests
 
     def validate_members(self, members):
         error_messages = [{} for _ in members]

@@ -34,3 +34,24 @@ class CategorySerializer(serializers.ModelSerializer):
             'participation_order',
             'results_order',
         )
+
+
+class QuestCategoriesSerializer(serializers.ModelSerializer):
+    status = serializers.ChoiceField(choices=QuestStatus.choices)
+    categories = CategorySerializer(many=True)
+
+    class Meta:
+        model = Quest
+        fields = (
+            'id',
+            'name',
+            'description',
+            'registration_start_at',
+            'start_at',
+            'end_at',
+            'stop_show_at',
+            'address',
+            'banner',
+            'status',
+            'categories',
+        )
