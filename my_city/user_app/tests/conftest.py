@@ -1,8 +1,10 @@
 import copy
+import os
 
 import pytest
+from django.utils import timezone
 
-from user_app.models import User, Team, Member
+from quest_app.models import Quest, Category
 
 SUCCESS_DATA = {
     "email": "vasya@mail.ru",
@@ -15,6 +17,32 @@ SUCCESS_DATA = {
                 "birth_date": "1978-02-15",
                 "phone": "+79003457896",
                 "email": "vasya@mail.ru",
+                "is_captain": True,
+                "member_number": 1
+            },
+            {
+                "full_name": "Иван Григорьевич",
+                "birth_date": "1975-02-15",
+                "phone": "+79003452896",
+                "email": "vasaya@mail.ru",
+                "is_captain": False,
+                "member_number": 2
+            }
+        ]
+    },
+}
+
+SUCCESS_ANOTHER_DATA = {
+    "email": "petya@mail.ru",
+    "password": "asd@$124Dsfd2",
+    "team": {
+        "name": "teamsd32fkjskjsgb",
+        "members": [
+            {
+                "full_name": "Василий Петрович",
+                "birth_date": "1978-02-15",
+                "phone": "+79003457896",
+                "email": "petya@mail.ru",
                 "is_captain": True,
                 "member_number": 1
             },
@@ -43,6 +71,11 @@ EMPTY_DATA = {
 @pytest.fixture
 def success_registration_data():
     return SUCCESS_DATA
+
+
+@pytest.fixture
+def success_registration_another_data():
+    return SUCCESS_ANOTHER_DATA
 
 
 @pytest.fixture
@@ -194,3 +227,42 @@ def error_registration_invalid_full_name():
     wrong_data = copy.deepcopy(SUCCESS_DATA)
     wrong_data['team']['members'][1]['full_name'] = 'Иван Григорьевичasd'
     return wrong_data
+
+
+@pytest.fixture
+def quests():
+    now = timezone.now()
+    coming_quest = Quest.objects.create(
+        name="Coming Quest",
+        registration_start_at=now - timezone.timedelta(days=1),
+        start_at=now + timezone.timedelta(days=1),
+        end_at=now + timezone.timedelta(days=2),
+        stop_show_at=now + timezone.timedelta(days=3),
+        address="Quest address",
+        banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
+    )
+    active_quest = Quest.objects.create(
+        name="Active Quest",
+        registration_start_at=now - timezone.timedelta(days=2),
+        start_at=now - timezone.timedelta(days=1),
+        end_at=now + timezone.timedelta(days=1),
+        stop_show_at=now + timezone.timedelta(days=2),
+        address="Quest address",
+        banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
+    )
+
+    categories = []
+    for quest in [coming_quest, active_quest]:
+        for i in range(5):
+            categories.append(
+                Category(
+                    name=f'Test category {i}',
+                    quest=quest,
+                    short_description=f'Test short description {i}',
+                    long_description=f'Test long description {i}' * 100,
+                    participation_order=i + 1,
+                    results_order=5 - i,
+                )
+            )
+    Category.objects.bulk_create(categories)
+    return [coming_quest, active_quest]

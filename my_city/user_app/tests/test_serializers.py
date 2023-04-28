@@ -1,5 +1,6 @@
 import pytest
 
+from quest_app.models import Quest, Category
 from user_app.models import User, Member, Team
 from user_app.serializers import UserSerializer, TeamSerializer, MemberSerializer, ComplexUserSerializer
 
@@ -17,7 +18,7 @@ class TestUserSerializer:
 
 @pytest.mark.django_db
 class TestTeamSerializer:
-    def test_team_serializer(self):
+    def test_team_serializer(self, quests):
         team_name = 'team1'
         user = User.objects.create_user('test@mail.ru', 'sd#f35DGD3!d$%')
         team = Team.objects.create(name=team_name, captain=user)
@@ -30,11 +31,18 @@ class TestTeamSerializer:
             member_number=1,
             team=team,
         )
+        quest = quests[0]
+        category = quest.categories.first()
+        category.teams.add(team)
         serializer = TeamSerializer(team)
         data = serializer.data
         assert data['id'] == team.id
         assert data['name'] == team_name
         assert len(data['members']) == 1
+        assert len(data['quests']) == 1
+        assert data['quests'][0]['id'] == quest.id
+        assert len(data['quests'][0]['categories']) == 1
+        assert data['quests'][0]['categories'][0]['id'] == category.id
 
 
 @pytest.mark.django_db

@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from quest_app.models import Quest, Category
 from quest_app.choices import QuestStatus
-from quest_app.serializers import QuestSerializer, CategorySerializer
+from quest_app.serializers import QuestSerializer, CategorySerializer, QuestCategoriesSerializer
 
 
 @pytest.mark.django_db
@@ -47,3 +47,38 @@ class TestCategorySerializer:
         data = serializer.data
         assert data['name'] == 'Test category'
         assert data['long_description'] == 'Test long description' * 100
+
+
+@pytest.mark.django_db
+class TestQuestCategoriesSerializer:
+    def test_quest_categories_serializer(self):
+        now = timezone.now()
+        quest = Quest.objects.create(
+            name="Test Quest",
+            registration_start_at=now - timezone.timedelta(days=1),
+            start_at=now + timezone.timedelta(days=1),
+            end_at=now + timezone.timedelta(days=2),
+            stop_show_at=now + timezone.timedelta(days=3)
+        )
+        quest = Quest.objects.with_status().get(id=quest.id)
+        Category.objects.create(
+            name='Test category 1',
+            quest=quest,
+            short_description='Test short description',
+            long_description='Test long description' * 100,
+            participation_order=1,
+            results_order=1,
+        )
+        Category.objects.create(
+            name='Test category 2',
+            quest=quest,
+            short_description='Test short description',
+            long_description='Test long description' * 100,
+            participation_order=2,
+            results_order=2,
+        )
+        serializer = QuestCategoriesSerializer(quest)
+        data = serializer.data
+        assert data['name'] == 'Test Quest'
+        assert data['status'] == QuestStatus.coming
+        assert len(data['categories']) == 2

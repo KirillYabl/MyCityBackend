@@ -173,27 +173,108 @@ class TestRegistrationAPI:
 
 @pytest.mark.django_db
 class TestUserAPI:
-    """The main tests purpose is check auth by token because it's only api in app"""
 
-    def test_success(self, success_registration_data):
+    def test_details(self, success_registration_data, quests):
         response = APIClient().post(reverse('registration'), data=success_registration_data, format='json')
         assert response.status_code == 200
-        token = response.json()['token']
+        registration_response_data = response.json()
+        token = registration_response_data['token']
+        user_id = registration_response_data['user']['id']
+
+        team = Team.objects.first()
+        coming_quest = quests[0]
+        coming_quest_first_category = coming_quest.categories.first()
+        coming_quest_first_category.teams.add(team)
 
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.get(reverse('users'))
+        response = client.get(reverse('users-detail', args=[user_id]))
         assert response.status_code == 200
+        users_response_data = response.json()
+
+        # т.к. регистрация и юзеры делят общий сериалайзер отличаюзийся только рид онли
+        # полями (идентификаторы и квесты), то здесь проверим только часть с квестами
+
+        response_quests = users_response_data['team']['quests']
+        assert len(response_quests) == 1  # команда зарегалась в одном квесте
+        assert response_quests[0]['id'] == coming_quest.id
+        assert len(response_quests[0]['categories']) == 1  # регистрация в одной из 5 категорий
+        assert response_quests[0]['categories'][0]['id'] == coming_quest_first_category.id
+
+        # теперь зарегистрируемся во втором квесте и проверим что данные изменились
+        active_quest = quests[1]
+        active_quest_first_category = active_quest.categories.first()
+        active_quest_first_category.teams.add(team)
+
+        response = client.get(reverse('users-detail', args=[user_id]))
+        assert response.status_code == 200
+        users_response_data = response.json()
+        response_quests = users_response_data['team']['quests']
+        assert len(response_quests) == 2
+        assert response_quests[0]['id'] in (coming_quest.id, active_quest.id)
+        assert response_quests[1]['id'] in (coming_quest.id, active_quest.id)
+        assert response_quests[0]['id'] != response_quests[1]['id']
+        assert len(response_quests[0]['categories']) == 1
+        assert len(response_quests[1]['categories']) == 1
+
+    def test_list(self, success_registration_data, success_registration_another_data, quests):
+        client = APIClient()
+        response = client.post(
+            reverse('registration'),
+            data=success_registration_data,
+            format='json'
+        )
+        assert response.status_code == 200
+        token = response.json()['token']
+
+        response = client.post(
+            reverse('registration'),
+            data=success_registration_another_data,
+            format='json'
+        )
+        assert response.status_code == 200
+
+        registered_quests_ids = set()
+        for team in Team.objects.all():
+            for quest in quests:
+                registered_quests_ids.add(quest.id)
+                quest.categories.first().teams.add(team)
+
+        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        # from django.conf import settings
+        # settings.DEBUG = True
+        # from django.db import connection
+        # queries_cnt = len(connection.queries)
+        response = client.get(reverse('users-list'))
+        assert response.status_code == 200
+        # assert len(connection.queries) == queries_cnt
+        users_response_data = response.json()['results']
+
+        assert len(users_response_data) == 2
+        for user in users_response_data:
+            user_response_quests = user['team']['quests']
+            assert len(user_response_quests) == 2
+            assert user_response_quests[0]['id'] in registered_quests_ids
+            assert user_response_quests[1]['id'] in registered_quests_ids
+            assert user_response_quests[0]['id'] != user_response_quests[1]['id']
+            assert len(user_response_quests[0]['categories']) == 1
+            assert len(user_response_quests[1]['categories']) == 1
 
     def test_wrong_token(self):
         token = 'asasfadsfsd23423nj3nj3&%jhGJH7y'
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        response = client.get(reverse('users'))
+        response = client.get(reverse('users-list'))
+        assert response.status_code == 401
+        assert 'Invalid token.' == response.json()['detail']
+        response = client.get(reverse('users-detail', args=[1]))
         assert response.status_code == 401
         assert 'Invalid token.' == response.json()['detail']
 
     def test_no_token(self):
-        response = APIClient().get(reverse('users'))
+        response = APIClient().get(reverse('users-list'))
+        assert response.status_code == 401
+        assert 'Authentication credentials were not provided.' == response.json()['detail']
+        response = APIClient().get(reverse('users-detail', args=[1]))
         assert response.status_code == 401
         assert 'Authentication credentials were not provided.' == response.json()['detail']

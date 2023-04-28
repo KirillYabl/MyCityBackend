@@ -146,7 +146,7 @@ class Command(BaseCommand):
         for quest in quests:
             teams_for_quest = random.sample(teams, k=50)
             for category_i in range(5):
-                teams_for_category = teams_for_quest[category_i:category_i + 10]
+                teams_for_category = teams_for_quest[category_i * 10:category_i * 10 + 10]
                 name = fake_ru.word()
                 category = Category.objects.create(
                     name=name,
