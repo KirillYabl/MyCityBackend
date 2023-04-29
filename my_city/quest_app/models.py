@@ -4,6 +4,7 @@ from django.template.defaultfilters import truncatechars
 from django.utils import timezone
 from sorl.thumbnail import ImageField
 
+from .choices import QuestStatus
 from .querysets import QuestQueryset
 
 
@@ -69,6 +70,23 @@ class Quest(models.Model):
     )
     address = models.CharField('адрес', max_length=256)
     banner = models.ImageField('баннер квеста', upload_to='quests')
+
+    def status(self):
+        now = timezone.now()
+
+        if self.registration_start_at <= now < self.start_at:
+            return QuestStatus.coming
+
+        if self.start_at <= now < self.end_at:
+            return QuestStatus.active
+
+        if self.end_at <= now and (self.stop_show_at is None or self.stop_show_at > now):
+            return QuestStatus.finished
+
+    def is_show(self):
+        now = timezone.now()
+        return self.registration_start_at <= now and (self.stop_show_at is None or self.stop_show_at > now)
+
 
     objects = QuestQueryset.as_manager()
 

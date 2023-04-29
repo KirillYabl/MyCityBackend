@@ -36,15 +36,5 @@ class QuestQueryset(models.QuerySet):
                     end_at__lte=now,
                     then=models.Value(QuestStatus.finished),
                 ),
-                # models.When(
-                #     stop_show_at__gt=now,
-                #     end_at__lte=now,
-                #     then=models.Value(QuestStatus.finished),
-                # ),
-                # models.When(
-                #     stop_show_at__isnull=True,
-                #     end_at__lte=now,
-                #     then=models.Value(QuestStatus.finished),
-                # ),
             )
         )
