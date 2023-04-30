@@ -17,3 +17,4 @@ pytest-django==4.5.2
 ruff==0.0.263
 coveralls==3.3.1
 drf-yasg==1.21.5
+django-cors-headers==3.14.0
