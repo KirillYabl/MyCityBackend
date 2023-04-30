@@ -23,7 +23,7 @@ drop_test_db:
 	docker compose run --rm api sh -c './manage.py drop_test_data'
 
 tests:
-	docker compose run --rm api sh -c 'pytest .'
+	docker compose run --rm api sh -c 'pytest my_city'
 
 tests-ci:
 	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'pytest ./my_city'

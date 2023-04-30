@@ -22,7 +22,7 @@ class Command(BaseCommand):
     """Заполняет тестовую БД фейковыми данными"""
 
     @atomic
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa: ARG002, C901
         fake_us = Faker()
         fake_ru = Faker(['ru-RU'])
 
