@@ -129,3 +129,6 @@ dmypy.json
 pgdata/
 media/
 dbbackups/
+
+# ruff
+.ruff_cache

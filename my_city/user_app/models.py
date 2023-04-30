@@ -2,9 +2,13 @@ import string
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import (MaxLengthValidator, MaxValueValidator,
-                                    MinLengthValidator, MinValueValidator,
-                                    RegexValidator)
+from django.core.validators import (
+    MaxLengthValidator,
+    MaxValueValidator,
+    MinLengthValidator,
+    MinValueValidator,
+    RegexValidator,
+)
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -16,13 +20,15 @@ min_password_length = 8
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(verbose_name='email address', unique=True, )
-    password = models.CharField(max_length=150,
-                                verbose_name='password',
-                                validators=(MinLengthValidator(min_password_length),
-                                            MaxLengthValidator(max_password_length),
-                                            )
-                                )
+    email = models.EmailField(verbose_name='email address', unique=True)
+    password = models.CharField(
+        max_length=150,
+        verbose_name='password',
+        validators=(
+            MinLengthValidator(min_password_length),
+            MaxLengthValidator(max_password_length),
+        ),
+    )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
@@ -39,20 +45,28 @@ class Team(models.Model):
     """
     Команда, фактически в рамках сайта почти профиль пользователя, поэтому связь с юзером 1 к 1.
 
-    Решено было не делать команду юзером, потому что регистрируется вроде человек, а команда это как бы его профиль.
+    Решено было не делать команду юзером, потому что регистрируется вроде человек,
+    а команда это как бы его профиль.
     """
+
     name = models.CharField(
         'название команды',
         max_length=100,
-        validators=[RegexValidator(
-            # rus, eng, punctuation, digits signs, splitted with only 1 space
-            regex=r'^[ёЁа-яА-Я{punct}\w]+( [ёЁа-яА-Я{punct}\w]+)*$'.format(punct=string.punctuation),
-            message=' '.join([
-                'в названии команды допускаются русские и английские буквы, цифры',
-                'и пробелы если название содержит несколько слов'
-            ])
-        )],
-        unique=True
+        validators=[
+            RegexValidator(
+                # rus, eng, punctuation, digits signs, splitted with only 1 space
+                regex=r'^[ёЁа-яА-Я{punct}\w]+( [ёЁа-яА-Я{punct}\w]+)*$'.format(
+                    punct=string.punctuation,
+                ),
+                message=' '.join(
+                    [
+                        'в названии команды допускаются русские и английские буквы, цифры',
+                        'и пробелы если название содержит несколько слов',
+                    ],
+                ),
+            ),
+        ],
+        unique=True,
     )
     captain = models.OneToOneField(
         verbose_name='капитан',
@@ -79,13 +93,18 @@ class Member(models.Model):
     Номер телефона и емейл не делаю уникальными, т.к. команды могут быть новые, а участники
     старые при очередных квестах
     """
+
     full_name = models.CharField(
         'ФИО',
         max_length=256,
-        validators=[RegexValidator(
-            regex=r'^[ёЁа-яА-Я-]+( [ёЁа-яА-Я-]+){1,4}$',  # words with dash (min 1) split with only 1 space
-            message='ФИО должно содержать обязательно фамилию и имя и состоять только из русских букв'
-        )],
+        validators=[
+            RegexValidator(
+                # words with dash (min 1) split with only 1 space
+                regex=r'^[ёЁа-яА-Я-]+( [ёЁа-яА-Я-]+){1,4}$',
+                message='ФИО должно содержать обязательно фамилию и имя и состоять \
+                    только из русских букв',
+            ),
+        ],
     )
     birth_date = models.DateField('дата рождения')
     phone = PhoneNumberField('номер телефона', region='RU', blank=True)
@@ -105,9 +124,7 @@ class Member(models.Model):
     class Meta:
         verbose_name = 'участник'
         verbose_name_plural = 'участники'
-        unique_together = (
-            ('team', 'member_number'),
-        )
+        unique_together = (('team', 'member_number'),)
 
     def __str__(self):
         return f'{self.full_name} ({self.birth_date})'

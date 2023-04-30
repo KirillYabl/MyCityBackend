@@ -1,0 +1,52 @@
+line-length = 100
+
+select = [
+  'A',     # flake8-builtins
+  'ARG',   # flake8-unused-arguments
+  'B',     # flake8-bugbear
+  'BLE',   # flake8-blind-except
+  'C4',    # flake8-comprehensions
+  'C90',   # mccabe
+  'COM',   # flake8-commas
+  'DTZ',   # flake8-datetimez
+  'E',     # pycodestyle
+  'EM',    # flake8-errmsg
+  'F',     # pyflakes
+  'G',     # flake8-logging-format
+  'I',     # isort
+  'INT',   # flake8-gettext
+  'ISC',   # flake8-implicit-str-concat
+  'N',     # pep8-naming
+  'PIE',   # flake8-pie
+  'PT',    # flake8-pytest-style
+  'PYI',   # flake8-pyi
+  'RET',   # flake8-return
+  'RSE',   # flake8-raise
+  'RUF',   # Ruff-specific rules
+  'S',     # flake8-bandit
+  'SIM',   # flake8-simplify
+  'SLF',   # flake8-self
+  'T10',   # flake8-debugger
+  'T20',   # flake8-print
+  'TID',   # flake8-tidy-imports
+  'UP',    # pyupgrade
+  'YTT',   # flake8-2020
+  "W",     # pycodestyle
+]
+
+
+# 'TCH', # flake8-type-checking
+# 'ICN', # flake8-import-conventions
+# 'INP', # flake8-no-pep420
+# 'PTH', # flake8-use-pathlib
+# 'PGH', # pygrep-hooks
+
+ignore = [
+  'S101',
+  'ARG005', # unused-lambda-argument
+  'RUF001', # ambiguous-unicode-character-string
+  'RUF002', # ambiguous-unicode-character-docstring
+  'RUF003', # ambiguous-unicode-character-comment
+  'S311',   # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+

@@ -1,7 +1,7 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework_nested import routers
 
-from .views import QuestAPI, CategoryAPI
+from .views import CategoryAPI, QuestAPI
 
 router = routers.SimpleRouter()
 router.register(r'quests', QuestAPI)

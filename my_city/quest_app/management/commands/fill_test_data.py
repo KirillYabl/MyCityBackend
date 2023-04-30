@@ -1,32 +1,28 @@
-import os
 import random
 
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
-from faker import Faker
 from django.utils import timezone
+from faker import Faker
+from user_app.models import Member, Team, User
+
 from quest_app.models import (
-    ContactType,
-    Contact,
     FAQ,
-    Quest,
-    Category,
+    AnswerAttempt,
     AnswerType,
     Assignment,
-    AnswerAttempt,
-)
-from user_app.models import (
-    User,
-    Team,
-    Member,
+    Category,
+    Contact,
+    ContactType,
+    Quest,
 )
 
 
 class Command(BaseCommand):
-    help = 'Заполняет тестовую БД фейковыми данными'
+    """Заполняет тестовую БД фейковыми данными"""
 
     @atomic
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # noqa: ARG002, C901
         fake_us = Faker()
         fake_ru = Faker(['ru-RU'])
 
@@ -34,7 +30,7 @@ class Command(BaseCommand):
         users = []
         teams = []
         members = []
-        for user_i in range(100):
+        for _ in range(100):
             email = fake_us.unique.email()
             password = fake_us.unique.password()
             user = User.objects.create_user(email='TEST_' + email, password=password)
@@ -81,7 +77,7 @@ class Command(BaseCommand):
                 contact_type=contact_type,
                 contact=contact,
                 description=description,
-                order=contact_i + 1
+                order=contact_i + 1,
             )
 
         # Создание FAQ
@@ -101,7 +97,7 @@ class Command(BaseCommand):
                 end_at=now + timezone.timedelta(days=2),
                 stop_show_at=now + timezone.timedelta(days=3),
                 address=fake_ru.address(),
-                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
+                banner=Quest.banner.field.upload_to / 'default_picture.png',
             ),
             Quest.objects.create(
                 name='TEST_Active',
@@ -111,7 +107,7 @@ class Command(BaseCommand):
                 end_at=now + timezone.timedelta(days=1),
                 stop_show_at=now + timezone.timedelta(days=2),
                 address=fake_ru.address(),
-                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
+                banner=Quest.banner.field.upload_to / 'default_picture.png',
             ),
             Quest.objects.create(
                 name='TEST_Finished with stop',
@@ -121,7 +117,7 @@ class Command(BaseCommand):
                 end_at=now - timezone.timedelta(days=1),
                 stop_show_at=now + timezone.timedelta(days=1),
                 address=fake_ru.address(),
-                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
+                banner=Quest.banner.field.upload_to / 'default_picture.png',
             ),
             Quest.objects.create(
                 name='TEST_Finished no stop',
@@ -130,8 +126,8 @@ class Command(BaseCommand):
                 start_at=now - timezone.timedelta(days=2),
                 end_at=now - timezone.timedelta(days=1),
                 address=fake_ru.address(),
-                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
-            )
+                banner=Quest.banner.field.upload_to / 'default_picture.png',
+            ),
         ]
 
         # Создание типов ответов
@@ -154,7 +150,7 @@ class Command(BaseCommand):
                     short_description=fake_ru.sentence(),
                     long_description=fake_ru.paragraph(),
                     participation_order=category_i + 1,
-                    results_order=5 - category_i
+                    results_order=5 - category_i,
                 )
                 for team in teams_for_category:
                     category.teams.add(team)
@@ -166,11 +162,11 @@ class Command(BaseCommand):
                     continue
 
                 category_assignments = []
-                for assignment_i in range(15):
+                for _ in range(15):
                     assignment = Assignment.objects.create(
                         category=category,
                         answer_type=random.choice(answer_types),
-                        picture=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
+                        picture=Quest.banner.field.upload_to / 'default_picture.png',
                         question=fake_ru.sentence(),
                         answer=fake_ru.word(),
                         is_enumeration=False,

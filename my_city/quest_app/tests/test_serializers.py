@@ -1,12 +1,12 @@
 import pytest
 from django.utils import timezone
 
-from quest_app.models import Quest, Category
 from quest_app.choices import QuestStatus
-from quest_app.serializers import QuestSerializer, CategorySerializer, QuestCategoriesSerializer
+from quest_app.models import Category, Quest
+from quest_app.serializers import CategorySerializer, QuestCategoriesSerializer, QuestSerializer
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestQuestSerializer:
     def test_quest_serializer(self):
         now = timezone.now()
@@ -15,7 +15,7 @@ class TestQuestSerializer:
             registration_start_at=now - timezone.timedelta(days=1),
             start_at=now + timezone.timedelta(days=1),
             end_at=now + timezone.timedelta(days=2),
-            stop_show_at=now + timezone.timedelta(days=3)
+            stop_show_at=now + timezone.timedelta(days=3),
         )
         quest = Quest.objects.with_status().get(id=quest.id)
         serializer = QuestSerializer(quest)
@@ -24,7 +24,7 @@ class TestQuestSerializer:
         assert data['status'] == QuestStatus.coming
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestCategorySerializer:
     def test_category_serializer(self):
         now = timezone.now()
@@ -33,7 +33,7 @@ class TestCategorySerializer:
             registration_start_at=now - timezone.timedelta(days=1),
             start_at=now + timezone.timedelta(days=1),
             end_at=now + timezone.timedelta(days=2),
-            stop_show_at=now + timezone.timedelta(days=3)
+            stop_show_at=now + timezone.timedelta(days=3),
         )
         category = Category.objects.create(
             name='Test category',
@@ -49,7 +49,7 @@ class TestCategorySerializer:
         assert data['long_description'] == 'Test long description' * 100
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db()
 class TestQuestCategoriesSerializer:
     def test_quest_categories_serializer(self):
         now = timezone.now()
@@ -58,7 +58,7 @@ class TestQuestCategoriesSerializer:
             registration_start_at=now - timezone.timedelta(days=1),
             start_at=now + timezone.timedelta(days=1),
             end_at=now + timezone.timedelta(days=2),
-            stop_show_at=now + timezone.timedelta(days=3)
+            stop_show_at=now + timezone.timedelta(days=3),
         )
         quest = Quest.objects.with_status().get(id=quest.id)
         Category.objects.create(

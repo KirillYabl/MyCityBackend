@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('user_app', '0001_initial'),
         ('quest_app', '0002_initial'),
@@ -14,6 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='category',
             name='teams',
-            field=models.ManyToManyField(blank=True, related_name='categories', to='user_app.team', verbose_name='участвующие команды'),
+            field=models.ManyToManyField(
+                blank=True,
+                related_name='categories',
+                to='user_app.team',
+                verbose_name='участвующие команды',
+            ),
         ),
     ]

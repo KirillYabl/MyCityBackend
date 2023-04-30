@@ -36,5 +36,5 @@ class QuestQueryset(models.QuerySet):
                     end_at__lte=now,
                     then=models.Value(QuestStatus.finished),
                 ),
-            )
+            ),
         )

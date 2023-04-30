@@ -1,6 +1,6 @@
-from django.urls import path, include
-from rest_framework_nested import routers
+from django.urls import include, path
 from knox import views as knox_views
+from rest_framework_nested import routers
 
 from .views import RegistrationAPI, UserAPI
 
