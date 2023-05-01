@@ -311,3 +311,4 @@ class TestUserAPI:
         response = APIClient().get(reverse('users-detail', args=[1]))
         assert response.status_code == 401
         assert response.json()['detail'] == 'Authentication credentials were not provided.'
+

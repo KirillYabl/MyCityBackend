@@ -39,6 +39,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
         Но при этом категории у квеста оставить только те, в которых участвует команда
 
+
         Причина использования этого метода, вместо обычных вложенных сериализаторов следующая
         1. Для фронтенда и для заказчика понятие квеста более первичное, чем категории,
         потому что пользователь регистрируется на квест. Но со стороны архитектуры БД было
@@ -74,8 +75,8 @@ class TeamSerializer(serializers.ModelSerializer):
                 if category['id'] in team_categories_ids
             ]
             serialized_quests[quest_index]['categories'] = quest_categories
-
         return serialized_quests
+
 
     def validate_members(self, members):
         error_messages = [{} for _ in members]

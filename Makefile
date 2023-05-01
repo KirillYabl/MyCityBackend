@@ -23,7 +23,13 @@ drop_test_db:
 	docker compose run --rm api sh -c './manage.py drop_test_data'
 
 tests:
-	docker compose exec api pytest
+	docker compose run --rm api sh -c 'pytest my_city'
+
+tests-ci:
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'pytest ./my_city'
+
+lint-ci:
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'ruff check ./my_city'
 
 lint:
 	ruff check ./my_city
@@ -31,4 +37,10 @@ lint:
 isort:
 	ruff --select I ./my_city --fix
 
-.PHONY: venv tests
+coverage-ci:
+	docker compose --file docker-compose.ci.yaml run --rm api sh -c 'coverage run --source=my_city -m pytest my_city'
+
+coveralls:
+	docker compose run --rm api sh -c 'coveralls'
+
+.PHONY: venv tests coveralls

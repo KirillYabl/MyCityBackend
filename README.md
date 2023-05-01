@@ -1,5 +1,9 @@
 # Backend сайта "Мой город"
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FKirillYabl%2FMyCityBackend%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/KirillYabl/MyCityBackend/goto?ref=main)
+[![Coverage Status](https://coveralls.io/repos/github/KirillYabl/MyCityBackend/badge.svg)](https://coveralls.io/github/KirillYabl/MyCityBackend)
+
+
 "Мой город" - это квест-игра, который проводится ежегодно для жителей города Ставрополь.
 
 При проведении есть несколько типов квестов, например пешие, для велосипедистов и для людей увлекающихся спортивным ориентированием.
