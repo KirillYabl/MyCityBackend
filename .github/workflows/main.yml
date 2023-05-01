@@ -18,9 +18,9 @@ jobs:
       - name: Run linter
         run: make lint-ci
       - name: Coveralls
-        run: |
-          docker compose --file docker-compose.ci.yaml run /
-          -e COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }} --rm api sh -c /
+        run: >
+          docker compose --file docker-compose.ci.yaml run
+          -e COVERALLS_REPO_TOKEN=${{ secrets.COVERALLS_REPO_TOKEN }} --rm api sh -c
           'coverage run --source=my_city -m pytest my_city && coveralls source=github'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
