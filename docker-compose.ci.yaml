@@ -19,6 +19,7 @@ services:
       context: .
       args:
         requirements_file: ci-requirements.txt
+        dependencies: 'git'
     environment:
       DJANGO_SECRET_KEY: REPLACE_ME
       POSTGRES_DB_URL: "postgres://USER_NAME:DB_PASSWORD@db:5432/DB_NAME"
