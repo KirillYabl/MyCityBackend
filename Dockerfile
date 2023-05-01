@@ -7,7 +7,8 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1 \
     PYTHONUNBUFFERED 1
 
-RUN pip install --upgrade pip
+
+RUN apt-get install git && pip install --upgrade pip
 COPY ./$requirements_file .
 RUN pip install -r $requirements_file
 
