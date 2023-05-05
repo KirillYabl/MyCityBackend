@@ -3,8 +3,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, viewsets
 
 from .filters import QuestFilter
-from .models import Category, Quest
-from .serializers import CategorySerializer, QuestSerializer
+from .models import Category, Quest, FAQ
+from .serializers import CategorySerializer, QuestSerializer, FAQSerializer
 
 
 @method_decorator(name='list', decorator=swagger_auto_schema(
@@ -43,4 +43,15 @@ class CategoryAPI(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Category.objects.filter(quest=self.kwargs['quest_pk'])
+
+
+class FAQAPI(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.AllowAny ]
+    serializer_class = FAQSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        return FAQ.objects.filter(question=self.kwargs['question_pk'])
+
+
 

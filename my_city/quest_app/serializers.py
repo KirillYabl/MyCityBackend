@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .choices import QuestStatus
-from .models import Category, Quest
+from .models import Category, Quest, FAQ
 
 
 class QuestSerializer(serializers.ModelSerializer):
@@ -55,3 +55,9 @@ class QuestCategoriesSerializer(serializers.ModelSerializer):
             'status',
             'categories',
         )
+
+
+class FAQSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FAQ
+        fields = '__all__'
