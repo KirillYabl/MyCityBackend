@@ -1,3 +1,4 @@
+import os
 import random
 
 from django.core.management.base import BaseCommand
@@ -97,7 +98,7 @@ class Command(BaseCommand):
                 end_at=now + timezone.timedelta(days=2),
                 stop_show_at=now + timezone.timedelta(days=3),
                 address=fake_ru.address(),
-                banner=Quest.banner.field.upload_to / 'default_picture.png',
+                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
             ),
             Quest.objects.create(
                 name='TEST_Active',
@@ -107,7 +108,7 @@ class Command(BaseCommand):
                 end_at=now + timezone.timedelta(days=1),
                 stop_show_at=now + timezone.timedelta(days=2),
                 address=fake_ru.address(),
-                banner=Quest.banner.field.upload_to / 'default_picture.png',
+                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
             ),
             Quest.objects.create(
                 name='TEST_Finished with stop',
@@ -117,7 +118,7 @@ class Command(BaseCommand):
                 end_at=now - timezone.timedelta(days=1),
                 stop_show_at=now + timezone.timedelta(days=1),
                 address=fake_ru.address(),
-                banner=Quest.banner.field.upload_to / 'default_picture.png',
+                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
             ),
             Quest.objects.create(
                 name='TEST_Finished no stop',
@@ -126,7 +127,7 @@ class Command(BaseCommand):
                 start_at=now - timezone.timedelta(days=2),
                 end_at=now - timezone.timedelta(days=1),
                 address=fake_ru.address(),
-                banner=Quest.banner.field.upload_to / 'default_picture.png',
+                banner=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
             ),
         ]
 
@@ -167,7 +168,7 @@ class Command(BaseCommand):
                     assignment = Assignment.objects.create(
                         category=category,
                         answer_type=random.choice(answer_types),
-                        picture=Quest.banner.field.upload_to / 'default_picture.png',
+                        picture=os.path.join(Quest.banner.field.upload_to, 'default_picture.png'),
                         question=fake_ru.sentence(),
                         answer=fake_ru.word(),
                         is_enumeration=False,
